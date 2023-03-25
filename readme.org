@@ -1,0 +1,26 @@
+* PostgreSQL Temporal Extension
+
+*Goal:* Provide a simple API to manage bitemporal tables on
+PostgreSQL.
+
+*Goal:* Keep the API agnostic to the range data type.
+
+*Non goal:* Extend de PostgreSQL SQL dialect, adhering to the SQL:2011
+standard.
+
+** Roadmap
+
+*** TODO insert
+*** TODO update
+*** TODO delete
+*** TODO select history functions
+*** TODO catalog
+*** TODO foreign keys
+
+** Installing
+
+TBD
+
+** Usage
+
+TBD

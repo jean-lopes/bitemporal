@@ -1,0 +1,11 @@
+* Example
+
+The running example used in the documentation and tests.
+
+#+BEGIN_SRC
+  create table s
+    ( id                 int
+    , value              int
+    , valid_period       int4range
+    , transaction_period int4range );
+#+END_SRC

@@ -1,0 +1,164 @@
+* Save operation
+
+This command should persist the desired data onto the main table,
+archiving any delete needed.
+
+** API
+
+| Parameter  | Type  | Description | Example |
+| fields     | text  |             |         |
+| values     | text  |             |         |
+| valid time | range |             |         |
+| where      | text  |             |         |
+
+** Tests
+
+In order to have a good start for this project, we start by planning
+all cases that should be handled by each DML operation. Later on we
+shall evolve this truth tables for more complex operations.
+
+/Test:/ identifier for a test with pattern: ~Tn~, where ~n~ is a
+natural number, zero padded to the length of the biggest ~n~.
+
+/Group:/ Name for a test group. Values: ~INSERT~.
+
+/Condition:/ What is the resulting condition after the operation.
+See: TBD.
+
+/Possible?:/ Since we are listing every possible combination, we might
+end up with impossible scenarios. This column denotes if a scenario
+can happen.
+
+/Actions:/ Describe what operations we shall execute for a given
+scenario. see TBD.
+
+~INSERT:~ Simply insert a row.
+
+~ARCHIVE-C:~ Move rows connected to the test row to the history table.
+
+~MERGE-INSERT:~ Merge rows connected to the test row and insert.
+
+#+NAME: truth-table
+| Possible? | Command | Rows | ROW4 | ROW3 | ROW2 | ROW1 | Actions                 |
+|-----------+---------+------+------+------+------+------+-------------------------|
+|           | SAVE    |    0 |      |      |      |      | INSERT                  |
+|           | SAVE    |    1 |      |      |      | O    |                         |
+|           | SAVE    |    1 |      |      |      | C    | ARCHIVE-C, MERGE-INSERT |
+|           | SAVE    |    1 |      |      |      | D    | INSERT                  |
+|           | SAVE    |    2 |      |      | O    | O    |                         |
+|           | SAVE    |    2 |      |      | O    | C    |                         |
+|           | SAVE    |    2 |      |      | O    | D    |                         |
+|           | SAVE    |    2 |      |      | C    | O    |                         |
+|           | SAVE    |    2 |      |      | C    | C    |                         |
+|           | SAVE    |    2 |      |      | C    | D    |                         |
+|           | SAVE    |    2 |      |      | D    | O    |                         |
+|           | SAVE    |    2 |      |      | D    | C    |                         |
+|           | SAVE    |    2 |      |      | D    | D    | INSERT                  |
+|           | SAVE    |    3 |      | O    | O    | O    |                         |
+|           | SAVE    |    3 |      | O    | O    | C    |                         |
+|           | SAVE    |    3 |      | O    | O    | D    |                         |
+|           | SAVE    |    3 |      | O    | C    | O    |                         |
+|           | SAVE    |    3 |      | O    | C    | C    |                         |
+|           | SAVE    |    3 |      | O    | C    | D    |                         |
+|           | SAVE    |    3 |      | O    | D    | O    |                         |
+|           | SAVE    |    3 |      | O    | D    | C    |                         |
+|           | SAVE    |    3 |      | O    | D    | D    |                         |
+|           | SAVE    |    3 |      | C    | O    | O    |                         |
+|           | SAVE    |    3 |      | C    | O    | C    |                         |
+|           | SAVE    |    3 |      | C    | O    | D    |                         |
+|           | SAVE    |    3 |      | C    | C    | O    |                         |
+| NO        | SAVE    |    3 |      | C    | C    | C    | -                       |
+|           | SAVE    |    3 |      | C    | C    | D    |                         |
+|           | SAVE    |    3 |      | C    | D    | O    |                         |
+|           | SAVE    |    3 |      | C    | D    | C    |                         |
+|           | SAVE    |    3 |      | C    | D    | D    |                         |
+|           | SAVE    |    3 |      | D    | O    | O    |                         |
+|           | SAVE    |    3 |      | D    | O    | C    |                         |
+|           | SAVE    |    3 |      | D    | O    | D    |                         |
+|           | SAVE    |    3 |      | D    | C    | O    |                         |
+|           | SAVE    |    3 |      | D    | C    | C    |                         |
+|           | SAVE    |    3 |      | D    | C    | D    |                         |
+|           | SAVE    |    3 |      | D    | D    | O    |                         |
+|           | SAVE    |    3 |      | D    | D    | C    |                         |
+|           | SAVE    |    3 |      | D    | D    | D    | INSERT                  |
+|           | SAVE    |    4 | O    | O    | O    | O    |                         |
+|           | SAVE    |    4 | O    | O    | O    | C    |                         |
+|           | SAVE    |    4 | O    | O    | O    | D    |                         |
+|           | SAVE    |    4 | O    | O    | C    | O    |                         |
+|           | SAVE    |    4 | O    | O    | C    | C    |                         |
+|           | SAVE    |    4 | O    | O    | C    | D    |                         |
+|           | SAVE    |    4 | O    | O    | D    | O    |                         |
+|           | SAVE    |    4 | O    | O    | D    | C    |                         |
+|           | SAVE    |    4 | O    | O    | D    | D    |                         |
+|           | SAVE    |    4 | O    | C    | O    | O    |                         |
+|           | SAVE    |    4 | O    | C    | O    | C    |                         |
+|           | SAVE    |    4 | O    | C    | O    | D    |                         |
+|           | SAVE    |    4 | O    | C    | C    | O    |                         |
+| NO        | SAVE    |    4 | O    | C    | C    | C    | -                       |
+|           | SAVE    |    4 | O    | C    | C    | D    |                         |
+|           | SAVE    |    4 | O    | C    | D    | O    |                         |
+|           | SAVE    |    4 | O    | C    | D    | C    |                         |
+|           | SAVE    |    4 | O    | C    | D    | D    |                         |
+|           | SAVE    |    4 | O    | D    | O    | O    |                         |
+|           | SAVE    |    4 | O    | D    | O    | C    |                         |
+|           | SAVE    |    4 | O    | D    | O    | D    |                         |
+|           | SAVE    |    4 | O    | D    | C    | O    |                         |
+|           | SAVE    |    4 | O    | D    | C    | C    |                         |
+|           | SAVE    |    4 | O    | D    | C    | D    |                         |
+|           | SAVE    |    4 | O    | D    | D    | O    |                         |
+|           | SAVE    |    4 | O    | D    | D    | C    |                         |
+|           | SAVE    |    4 | O    | D    | D    | D    |                         |
+|           | SAVE    |    4 | C    | O    | O    | O    |                         |
+|           | SAVE    |    4 | C    | O    | O    | C    |                         |
+|           | SAVE    |    4 | C    | O    | O    | D    |                         |
+|           | SAVE    |    4 | C    | O    | C    | O    |                         |
+| NO        | SAVE    |    4 | C    | O    | C    | C    | -                       |
+|           | SAVE    |    4 | C    | O    | C    | D    |                         |
+|           | SAVE    |    4 | C    | O    | D    | O    |                         |
+|           | SAVE    |    4 | C    | O    | D    | C    |                         |
+|           | SAVE    |    4 | C    | O    | D    | D    |                         |
+|           | SAVE    |    4 | C    | C    | O    | O    |                         |
+|           | SAVE    |    4 | C    | C    | O    | C    |                         |
+|           | SAVE    |    4 | C    | C    | O    | D    |                         |
+| NO        | SAVE    |    4 | C    | C    | C    | O    | -                       |
+| NO        | SAVE    |    4 | C    | C    | C    | C    | -                       |
+| NO        | SAVE    |    4 | C    | C    | C    | D    | -                       |
+|           | SAVE    |    4 | C    | C    | D    | O    |                         |
+| NO        | SAVE    |    4 | C    | C    | D    | C    | -                       |
+|           | SAVE    |    4 | C    | C    | D    | D    |                         |
+|           | SAVE    |    4 | C    | D    | O    | O    |                         |
+|           | SAVE    |    4 | C    | D    | O    | C    |                         |
+|           | SAVE    |    4 | C    | D    | O    | D    |                         |
+|           | SAVE    |    4 | C    | D    | C    | O    |                         |
+| NO        | SAVE    |    4 | C    | D    | C    | C    | -                       |
+|           | SAVE    |    4 | C    | D    | C    | D    |                         |
+|           | SAVE    |    4 | C    | D    | D    | O    |                         |
+|           | SAVE    |    4 | C    | D    | D    | C    |                         |
+|           | SAVE    |    4 | C    | D    | D    | D    |                         |
+|           | SAVE    |    4 | D    | O    | O    | O    |                         |
+|           | SAVE    |    4 | D    | O    | O    | C    |                         |
+|           | SAVE    |    4 | D    | O    | O    | D    |                         |
+|           | SAVE    |    4 | D    | O    | C    | O    |                         |
+|           | SAVE    |    4 | D    | O    | C    | C    |                         |
+|           | SAVE    |    4 | D    | O    | C    | D    |                         |
+|           | SAVE    |    4 | D    | O    | D    | O    |                         |
+|           | SAVE    |    4 | D    | O    | D    | C    |                         |
+|           | SAVE    |    4 | D    | O    | D    | D    |                         |
+|           | SAVE    |    4 | D    | C    | O    | O    |                         |
+|           | SAVE    |    4 | D    | C    | O    | C    |                         |
+|           | SAVE    |    4 | D    | C    | O    | D    |                         |
+|           | SAVE    |    4 | D    | C    | C    | O    |                         |
+| NO        | SAVE    |    4 | D    | C    | C    | C    | -                       |
+|           | SAVE    |    4 | D    | C    | C    | D    |                         |
+|           | SAVE    |    4 | D    | C    | D    | O    |                         |
+|           | SAVE    |    4 | D    | C    | D    | C    |                         |
+|           | SAVE    |    4 | D    | C    | D    | D    |                         |
+|           | SAVE    |    4 | D    | D    | O    | O    |                         |
+|           | SAVE    |    4 | D    | D    | O    | C    |                         |
+|           | SAVE    |    4 | D    | D    | O    | D    |                         |
+|           | SAVE    |    4 | D    | D    | C    | O    |                         |
+|           | SAVE    |    4 | D    | D    | C    | C    |                         |
+|           | SAVE    |    4 | D    | D    | C    | D    |                         |
+|           | SAVE    |    4 | D    | D    | D    | O    |                         |
+|           | SAVE    |    4 | D    | D    | D    | C    |                         |
+|           | SAVE    |    4 | D    | D    | D    | D    | INSERT                  |

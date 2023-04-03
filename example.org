@@ -6,6 +6,6 @@ The running example used in the documentation and tests.
   create table s
     ( id                 int
     , value              int
-    , valid_period       int4range
-    , transaction_period int4range );
+    , valid_period       tstzrange
+    , transaction_period tstzrange );
 #+END_SRC

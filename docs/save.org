@@ -162,3 +162,56 @@ scenario. see TBD.
 |  112 |           | SAVE    |    4 | Disconnected | Disconnected | Disconnected | Overlapped   |                                                         |
 |  113 |           | SAVE    |    4 | Disconnected | Disconnected | Disconnected | Connected    |                                                         |
 |  114 |           | SAVE    |    4 | Disconnected | Disconnected | Disconnected | Disconnected | INSERT                                                  |
+
+
+
+
+
+
+#+BEGIN_SRC plantuml :file test.svg
+  @startgantt
+  scale 2
+  [separated1] lasts 5 days
+  [separated2] lasts 5 days
+  [connected1] lasts 5 days
+  [connected2] lasts 5 days
+  [overlapped1] lasts 10 days
+  [overlapped2] lasts 10 days
+  [target] lasts 30 days
+  [overlapped3] lasts 10 days
+  [overlapped4] lasts 10 days
+  [connected3] lasts 5 days
+  [connected4] lasts 5 days
+  [separated3] lasts 5 days
+  [separated4] lasts 5 days
+
+  [separated1]  starts D+0
+  [separated2]  starts D+10
+  [connected1]  starts D+20
+  [connected2]  starts D+20
+  [overlapped1] starts D+20
+  [overlapped2] starts D+30
+  [target]      starts D+25
+  [overlapped3] starts D+40
+  [overlapped4] starts D+50
+  [connected3]  starts D+55
+  [connected4]  starts D+55
+  [separated3]  starts D+65
+  [separated4]  starts D+75
+
+  [separated2] displays on same row as [separated1]
+  [separated3] displays on same row as [separated1]
+  [separated4] displays on same row as [separated1]
+
+  [connected3] displays on same row as [connected1]
+  [connected4] displays on same row as [connected2]
+
+  [overlapped2] displays on same row as [overlapped1]
+  [overlapped3] displays on same row as [overlapped1]
+  [overlapped4] displays on same row as [overlapped1]
+
+  @endgantt
+#+END_SRC
+
+#+RESULTS:
+[[file:test.svg]]

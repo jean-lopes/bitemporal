@@ -1,4 +1,4 @@
- \set QUIET 'on'
+\set QUIET 'on'
 
 truncate s;
 

@@ -1,6 +1,4 @@
-PSQL ?= psql
-PSQL_FLAGS ?= -U postgres
-PSQL_CMD ?= $(PSQL) $(PSQL_FLAGS)
+PSQL_CMD ?= psql -U postgres
 
 clean:
 	rm -f test/generated.sql
@@ -8,9 +6,13 @@ clean:
 test: clean
 	$(PSQL_CMD) -f test/ddl.sql
 	$(PSQL_CMD) -f test/oracle.sql
-	$(PSQL_CMD) -f test/generate.sql -t -q | sed -e 's/\\n/\n/g' | tail --bytes=+2 > test/generated.sql
-	$(PSQL_CMD) -f test/generated.sql
-#	$(PSQL_CMD) -f test/manual.sql --output test/manual.out
+	$(PSQL_CMD) -f test/generate.sql --tuples-only | sed -e 's/\\n/\n/g' | tail --bytes=+2 > test/generated.sql
+
+	$(PSQL_CMD) -f test/generated.sql --output test/generated.out
+	diff --ignore-trailing-space --ignore-blank-lines test/other.out test/other.out.expected
+
+	$(PSQL_CMD) -f test/other.sql --output test/other.out > test/other.out
+	diff --ignore-trailing-space --ignore-blank-lines test/other.out test/other.out.expected
 
 	$(PSQL_CMD) -f test/adjacency.sql --output test/adjacency.out
 	diff --ignore-trailing-space --ignore-blank-lines test/adjacency.out test/adjacency.out.expected

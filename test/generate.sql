@@ -1,3 +1,5 @@
+\set QUIET 'on'
+
 drop table if exists relationships cascade;
 
 create table relationships(name text not null primary key);
@@ -118,7 +120,7 @@ create or replace view generate_tests as
            , '\n') as "tests"
       from generate_test_data;
 
-select '\set QUIET ''on''\n\ntruncate s;\n\n'
+select '\set QUIET ''on''\n\ndelete from s where id like ''generated-%'';\n\n'
     || tests
     || '\n'
     || 'select id as "failed_tests"\n'

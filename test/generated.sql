@@ -1,6 +1,6 @@
 \set QUIET 'on'
 
-truncate s;
+delete from s where id like 'generated-%';
 
 \echo 'generated-01 - [----]'
 call unpack('generated-01');

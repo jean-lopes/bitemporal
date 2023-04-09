@@ -1,3 +1,5 @@
+\set QUIET 'on'
+
 drop table if exists s cascade;
 drop table if exists s_history cascade;
 

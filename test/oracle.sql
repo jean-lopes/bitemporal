@@ -1,3 +1,5 @@
+\set QUIET 'on'
+
 drop table if exists unpacked cascade;
 drop table if exists packed cascade;
 drop procedure if exists oracle_save_s(s_id s.id%type);

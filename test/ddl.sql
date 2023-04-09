@@ -74,27 +74,30 @@ begin
 
     raise debug 'checking for adjacency: (%, %, %)', s_id, s_value, s_valid_period;
 
-    select int4range(min(lower(valid_period)), max(upper(valid_period)))
-      into vp
-      from s
-     where id = s_id
-       and value = s_value
-       and valid_period -|- s_valid_period
-     group by id, value;
+    select range_agg(x.valid_period)
+      into vps
+      from (select s_valid_period as "valid_period"
+             union all
+            select valid_period
+              from s
+             where id = s_id
+               and value = s_value
+               and valid_period -|- s_valid_period) x     ;
 
-    raise debug 'vp: %', vp;
+    raise debug 'vps: %', vps;
 
-    if vp is not null then
+    if not isempty(vps) then
+      foreach vp in array (select array_agg(x.*) from unnest(vps) x)
+      loop
+        raise debug 'vp: %', vp;
+
         raise debug 'deleting adjacents: (%, %, %)', s_id, s_value, s_valid_period;
         delete from s where id = s_id and value = s_value and valid_period -|- s_valid_period;
 
-        raise debug 'vp := % + %', vp, s_valid_period;
-        vp := vp + s_valid_period;
-
         raise debug 'inserting consolidated record: (%, %, %)', s_id, s_value, vp;
         insert into s(id, value, valid_period) values (s_id, s_value, vp);
-
         return;
+      end loop;
     end if;
 
     raise debug 'inserting desired record: (%, %, %)', s_id, s_value, s_valid_period;

@@ -14,6 +14,13 @@ create table s
 
 create table s_history (like s);
 
+create table relationships(name text not null primary key);
+
+insert into relationships(name)
+values ('overlapped')
+     , ('connected')
+     , ('separated');
+
 create function last_tx_time()
 returns int as
 $BODY$
@@ -169,6 +176,8 @@ declare
   n int;
   vp s.valid_period%type;
 begin
+  call unpack(s_id);
+
   for t in 25 .. 54
   loop
     vp := int4range(t, t, '[]');
@@ -178,4 +187,6 @@ begin
     on conflict (id, valid_period)
     do update set value = 0;
   end loop;
+
+  call pack(s_id);
 end; $$ language plpgsql;

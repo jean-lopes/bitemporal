@@ -150,30 +150,24 @@ begin
   end loop;
 end; $$ language plpgsql;
 
-create procedure pack(s_id s.id%type) as $$
-declare
-  n int;
+create procedure pack(filter text) as $$
 begin
-  delete from packed
-  where id = s_id;
+  execute format('delete from packed as s where %s', filter);
 
-  insert into packed(id, value, valid_period, transaction_period)
-  select id
-       , value
-       , unnest(range_agg(valid_period)) as valid_period
-       , int4range(0, null, '[)')
-    from unpacked
-   where id = s_id
-   group by id, value
-   order by valid_period;
+  execute format('insert into packed(id, value, valid_period, transaction_period)
+                  select id
+                       , value
+                       , unnest(range_agg(valid_period)) as valid_period
+                       , int4range(0, null, ''[)'')
+                    from unpacked as s
+                   where %s
+                   group by id, value
+                   order by valid_period', filter);
 end; $$ language plpgsql;
 
-create procedure oracle_save_s(s_id s.id%type) as $$
+create procedure oracle_save_s(s_id s.id%type) as $body$
 declare
-  r s;
-  l int;
-  u int;
-  n int;
+  t int;
   vp s.valid_period%type;
 begin
   call unpack(s_id);
@@ -188,5 +182,5 @@ begin
     do update set value = 0;
   end loop;
 
-  call pack(s_id);
-end; $$ language plpgsql;
+  call pack(format('s.id = %s', quote_nullable(s_id)));
+end; $body$ language plpgsql;

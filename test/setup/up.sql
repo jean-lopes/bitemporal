@@ -116,23 +116,22 @@ alter table unpacked
     add constraint uk_unpacked
     unique (id, valid_period);
 
-create procedure unpack(s_id s.id%type) as $$
+create procedure unpack(filter text) as $body$
 declare
   r s;
   l int;
   u int;
   n int;
 begin
-  delete from unpacked
-  where id = s_id;
+  execute format('delete from unpacked as "s" where %s', filter);
 
-  for r in (select id
-                 , value
-                 , valid_period
-                 , transaction_period
-              from s
-             where id = s_id
-             order by valid_period)
+  for r in execute format($$select id
+                                 , value
+                                 , valid_period
+                                 , transaction_period
+                              from s as "s"
+                             where %s
+                             order by valid_period$$, filter)
   loop
     l := lower(r.valid_period);
     u := upper(r.valid_period) - 1;
@@ -148,29 +147,30 @@ begin
       end loop;
     end if;
   end loop;
-end; $$ language plpgsql;
+end; $body$ language plpgsql;
 
-create procedure pack(filter text) as $$
+create procedure pack(filter text) as $body$
 begin
   execute format('delete from packed as s where %s', filter);
 
-  execute format('insert into packed(id, value, valid_period, transaction_period)
-                  select id
-                       , value
-                       , unnest(range_agg(valid_period)) as valid_period
-                       , int4range(0, null, ''[)'')
-                    from unpacked as s
-                   where %s
-                   group by id, value
-                   order by valid_period', filter);
-end; $$ language plpgsql;
+  execute format($$insert into packed(id, value, valid_period, transaction_period)
+                   select id
+                        , value
+                        , unnest(range_agg(valid_period)) as valid_period
+                        , int4range(0, null, '[)')
+                     from unpacked as s
+                    where %s
+                    group by id, value
+                    order by valid_period$$, filter);
+end; $body$ language plpgsql;
 
 create procedure oracle_save_s(s_id s.id%type) as $body$
 declare
   t int;
   vp s.valid_period%type;
+  filter text := format('s.id = %s', quote_literal(s_id));
 begin
-  call unpack(s_id);
+  call unpack(filter);
 
   for t in 25 .. 54
   loop
@@ -182,5 +182,5 @@ begin
     do update set value = 0;
   end loop;
 
-  call pack(format('s.id = %s', quote_nullable(s_id)));
+  call pack(filter);
 end; $body$ language plpgsql;

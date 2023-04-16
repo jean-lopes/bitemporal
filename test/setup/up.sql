@@ -184,3 +184,38 @@ begin
 
   call pack(filter);
 end; $body$ language plpgsql;
+
+create procedure oracle_remove_s(filter text, s_valid_period s.valid_period%type) as $body$
+declare
+  t int;
+  vp s.valid_period%type;
+  clauses text[] default '{}';
+  delete_filter text default '';
+begin
+  call unpack(filter);
+
+  if length(filter) > 0 then
+     clauses := clauses || filter;
+  end if;
+
+  if lower_inf(s_valid_period) and not upper_inf(s_valid_period) then
+    clauses := clauses || format('upper(s.valid_period) <= %s', upper(s_valid_period));
+  elseif not lower_inf(s_valid_period) and upper_inf(s_valid_period) then
+    clauses := clauses || format('lower(s.valid_period) >= %s', lower(s_valid_period));
+  elseif not lower_inf(s_valid_period) and not upper_inf(s_valid_period) then
+    clauses := clauses || format('lower(s.valid_period) >= %s', lower(s_valid_period));
+    clauses := clauses || format('upper(s.valid_period) <= %s', upper(s_valid_period));
+  end if;
+
+  select coalesce(string_agg(x, ' and '), '')
+    into delete_filter
+    from unnest(clauses) x;
+
+  if length(delete_filter) > 0 then
+    delete_filter := 'where ' || delete_filter;
+  end if;
+
+  execute format('delete from unpacked as "s" %s', delete_filter);
+
+  call pack(filter);
+end; $body$ language plpgsql;

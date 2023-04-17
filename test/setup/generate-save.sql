@@ -1,6 +1,11 @@
 \set QUIET 'on'
-
-with raw_truth_table as (
+with relationships as (
+    select 'overlapped' as "name"
+    union
+    select 'connected'
+    union
+    select 'separated')
+, raw_truth_table as (
     select row_number() over() as "test_id"
          , records
          , row4
@@ -56,7 +61,7 @@ with raw_truth_table as (
                      and x.row3 is not null
                      and x.row3 = 'connected'))
 , truth_table as (
-    select 'generated-'|| :'cmd' ||'-'|| lpad(test_id::text, (select length(count(*)::text) from raw_truth_table), '0') as "test_id"
+    select 'generated-save' ||'-'|| lpad(test_id::text, (select length(count(*)::text) from raw_truth_table), '0') as "test_id"
          , records
          , row4
          , row3
@@ -92,7 +97,6 @@ with raw_truth_table as (
              when 'separated'  then '('''|| test_id ||''', 1, ''[ 0,  5)'');'
              else null
            end row1
-         , 'call '|| :'cmd' ||'('''|| test_id ||''', 0, ''[25, 55)'');' command_under_test
       from truth_table)
 , tests as (
     select string_agg
@@ -101,11 +105,15 @@ with raw_truth_table as (
              || coalesce(prefix || row3 || '\n', '')
              || coalesce(prefix || row2 || '\n', '')
              || coalesce(prefix || row1 || '\n', '')
-             || 'call '|| :'oracle_cmd' ||'('''|| test_id ||''');\n'
-             || command_under_test || '\n'
+             || format('call oracle_save_s(%s);\n'
+                      , quote_literal(test_id))
+             || format( 'call save_s(%s, %s, %s);\n\n'
+                      , quote_literal(test_id)
+                      , 0
+                      , quote_literal('[25,55)'))
            , '\n') as "tests"
       from test_data)
-select '\set QUIET ''on''\n\ndelete from s where id like ''generated-'|| :'cmd' ||'-%'';\n\n'
+select '\set QUIET ''on''\n\ndelete from s where id like ''generated-save-%'';\n\n'
     || tests
     || '\n'
     || 'select id as "failed_tests"\n'
@@ -113,5 +121,5 @@ select '\set QUIET ''on''\n\ndelete from s where id like ''generated-'|| :'cmd' 
     || '          from s\n'
     || '          full outer join packed using (id, value, valid_period)\n'
     || '         where s.id is null or packed.id is null) x\n'
-    || ' where id is not null and id like ''generated-'|| :'cmd' ||'-%'''
+    || ' where id is not null and id like ''generated-save-%'''
 from tests;

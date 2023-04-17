@@ -123,13 +123,13 @@ declare
   u int;
   n int;
 begin
-  execute format('delete from unpacked as "s" where %s', filter);
+  execute format('delete from unpacked as "x" where %s', filter);
 
   for r in execute format($$select id
                                  , value
                                  , valid_period
                                  , transaction_period
-                              from s as "s"
+                              from s as "x"
                              where %s
                              order by valid_period$$, filter)
   loop
@@ -151,14 +151,14 @@ end; $body$ language plpgsql;
 
 create procedure pack(filter text) as $body$
 begin
-  execute format('delete from packed as s where %s', filter);
+  execute format('delete from packed as "x" where %s', filter);
 
   execute format($$insert into packed(id, value, valid_period, transaction_period)
                    select id
                         , value
                         , unnest(range_agg(valid_period)) as valid_period
                         , int4range(0, null, '[)')
-                     from unpacked as s
+                     from unpacked as "x"
                     where %s
                     group by id, value
                     order by valid_period$$, filter);
@@ -168,7 +168,7 @@ create procedure oracle_save_s(s_id s.id%type) as $body$
 declare
   t int;
   vp s.valid_period%type;
-  filter text := format('s.id = %s', quote_literal(s_id));
+  filter text := format('x.id = %s', quote_literal(s_id));
 begin
   call unpack(filter);
 
@@ -187,8 +187,6 @@ end; $body$ language plpgsql;
 
 create procedure oracle_remove_s(filter text, s_valid_period s.valid_period%type) as $body$
 declare
-  t int;
-  vp s.valid_period%type;
   clauses text[] default '{}';
   delete_filter text default '';
 begin
@@ -199,12 +197,12 @@ begin
   end if;
 
   if lower_inf(s_valid_period) and not upper_inf(s_valid_period) then
-    clauses := clauses || format('upper(s.valid_period) <= %s', upper(s_valid_period));
+    clauses := clauses || format('upper(x.valid_period) <= %s', upper(s_valid_period));
   elseif not lower_inf(s_valid_period) and upper_inf(s_valid_period) then
-    clauses := clauses || format('lower(s.valid_period) >= %s', lower(s_valid_period));
+    clauses := clauses || format('lower(x.valid_period) >= %s', lower(s_valid_period));
   elseif not lower_inf(s_valid_period) and not upper_inf(s_valid_period) then
-    clauses := clauses || format('lower(s.valid_period) >= %s', lower(s_valid_period));
-    clauses := clauses || format('upper(s.valid_period) <= %s', upper(s_valid_period));
+    clauses := clauses || format('lower(x.valid_period) >= %s', lower(s_valid_period));
+    clauses := clauses || format('upper(x.valid_period) <= %s', upper(s_valid_period));
   end if;
 
   select coalesce(string_agg(x, ' and '), '')
@@ -215,7 +213,7 @@ begin
     delete_filter := 'where ' || delete_filter;
   end if;
 
-  execute format('delete from unpacked as "s" %s', delete_filter);
+  execute format('delete from unpacked as "x" %s', delete_filter);
 
   call pack(filter);
 end; $body$ language plpgsql;

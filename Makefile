@@ -14,14 +14,15 @@ clean:
 setup-test: clean
 	$(PSQL_CMD) --file test/setup/up.sql
 
-	$(PSQL_CMD) \
-			--file test/setup/generate.sql \
-			--variable cmd=save_s \
-			--variable oracle_cmd=oracle_save_s \
-			--tuples-only \
+	$(PSQL_CMD) --file test/setup/generate-save.sql --tuples-only \
 		| sed -e 's/\\n/\n/g' \
 		| tail --bytes=+2 \
 		> test/save/generated.sql
+
+	$(PSQL_CMD) --file test/setup/generate-remove.sql --tuples-only \
+		| sed -e 's/\\n/\n/g' \
+		| tail --bytes=+2 \
+		> test/remove/generated.sql
 
 test: setup-test
 	for t in $(SAVE_TESTS); \

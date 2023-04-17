@@ -4,6 +4,7 @@
 drop table if exists relationships cascade;
 
 -- test oracle
+drop procedure if exists oracle_remove_s(text,s.valid_period%type) cascade;
 drop procedure if exists oracle_save_s(s.id%type) cascade;
 drop procedure if exists unpack(s.id%type) cascade;
 drop procedure if exists pack(s.id%type) cascade;

@@ -14,12 +14,13 @@ create table s
 
 create table s_history (like s);
 
-create table relationships(name text not null primary key);
+create table unpacked (like s);
 
-insert into relationships(name)
-values ('overlapped')
-     , ('connected')
-     , ('separated');
+create table packed (like s);
+
+alter table unpacked
+    add constraint uk_unpacked
+    unique (id, valid_period);
 
 create function last_tx_time()
 returns int as
@@ -109,12 +110,49 @@ begin
     insert into s(id, value, valid_period) values(s_id, s_value, s_valid_period);
 end; $$ language plpgsql;
 
-create table unpacked (like s);
-create table packed (like s);
+create or replace procedure remove_s
+    ( filter         text
+    , s_valid_period s.valid_period%type
+    ) as $body$
+declare
+    r s;
+    vps int4multirange;
+    vp s.valid_period%type;
+begin
+    if isempty(s_valid_period) then
+        raise exception 'empty valid time';
+    end if;
 
-alter table unpacked
-    add constraint uk_unpacked
-    unique (id, valid_period);
+    raise debug 'checking for overlaps: (%, %)', filter, s_valid_period;
+    for r in execute format($$select x.id
+                                   , x.value
+                                   , x.valid_period
+                                   , x.transaction_period
+                                from s as "x"
+                               where %s
+                                 and x.valid_period && %s$$
+                           , filter
+                           , quote_literal(s_valid_period))
+    loop
+        raise debug 'found overlapping record: (%, %, %)', r.id, r.value, r.valid_period;
+
+        vps := r.valid_period::int4multirange - s_valid_period::int4multirange;
+        raise debug 'vps: %', vps;
+
+        raise debug 'deleting record by PK (%, %)', r.id, r.valid_period;
+        delete from s
+              where id = r.id
+                and valid_period = r.valid_period;
+
+        if not isempty(vps) then
+          foreach vp in array (select array_agg(x.*) from unnest(vps) x)
+          loop
+            raise debug 'inserting remaining part of overlapped record: (%, %, %)', r.id, r.value, vp;
+            insert into s(id, value, valid_period) values(r.id, r.value, vp);
+          end loop;
+        end if;
+    end loop;
+end; $body$ language plpgsql;
 
 create procedure unpack(filter text) as $body$
 declare

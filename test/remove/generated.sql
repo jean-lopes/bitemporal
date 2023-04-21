@@ -5,7 +5,7 @@ delete from s where id like 'generated-remove-%';
 \echo 'generated-remove-01 - [----]'
 call oracle_remove_s($$x.id = 'generated-remove-01'$$, '[25, 55)');
 call remove_s($$x.id = 'generated-remove-01'$$, '[25,55)');
-g
+
 
 \echo 'generated-remove-02 - [---c]'
 insert into s(id, value, valid_period) values ('generated-remove-02', 0, '[20, 25)');
@@ -689,3 +689,4 @@ select id as "failed_tests"
           full outer join packed using (id, value, valid_period)
          where s.id is null or packed.id is null) x
  where id is not null and id like 'generated-remove-%'
+

@@ -1,0 +1,623 @@
+     id     | value | valid_period
+------------+-------+--------------
+ remove-000 |     1 | [0,5)
+(1 row)
+
+ id | value | valid_period
+----+-------+--------------
+(0 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-002 |     1 | [55,)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-003 |     1 | (,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-004 |     1 | (,25)
+ remove-004 |     1 | [55,)
+(2 rows)
+
+ id | value | valid_period
+----+-------+--------------
+(0 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-006 |     1 | [55,80)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-007 |     1 | (,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-008 |     1 | (,25)
+ remove-008 |     1 | [55,80)
+(2 rows)
+
+ id | value | valid_period
+----+-------+--------------
+(0 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-010 |     1 | [55,)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-011 |     1 | [0,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-012 |     1 | [0,25)
+ remove-012 |     1 | [55,)
+(2 rows)
+
+ id | value | valid_period
+----+-------+--------------
+(0 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-014 |     1 | [55,80)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-015 |     1 | [0,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-016 |     1 | [0,25)
+ remove-016 |     1 | [55,80)
+(2 rows)
+
+ id | value | valid_period
+----+-------+--------------
+(0 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-018 |     0 | [20,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-019 |     1 | [0,5)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-020 |     1 | [20,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-021 |     1 | [0,5)
+ remove-021 |     0 | [20,25)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-022 |     2 | [10,15)
+ remove-022 |     0 | [20,25)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-023 |     1 | [0,5)
+ remove-023 |     2 | [10,15)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-024 |     2 | [10,15)
+ remove-024 |     1 | [20,25)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-025 |     0 | [20,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-026 |     1 | [0,5)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-027 |     1 | [20,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-028 |     1 | [0,5)
+ remove-028 |     0 | [20,25)
+ remove-028 |     0 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-029 |     2 | [10,15)
+ remove-029 |     0 | [20,25)
+ remove-029 |     0 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-030 |     1 | [0,5)
+ remove-030 |     2 | [10,15)
+ remove-030 |     0 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-031 |     2 | [10,15)
+ remove-031 |     1 | [20,25)
+ remove-031 |     0 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-032 |     0 | [20,25)
+ remove-032 |     0 | [55,60)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-033 |     1 | [0,5)
+ remove-033 |     0 | [55,60)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-034 |     1 | [20,25)
+ remove-034 |     0 | [55,60)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-035 |     1 | [0,5)
+ remove-035 |     0 | [20,25)
+ remove-035 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-036 |     2 | [10,15)
+ remove-036 |     0 | [20,25)
+ remove-036 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-037 |     1 | [0,5)
+ remove-037 |     2 | [10,15)
+ remove-037 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-038 |     2 | [10,15)
+ remove-038 |     1 | [20,25)
+ remove-038 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-039 |     0 | [20,25)
+ remove-039 |     3 | [65,70)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-040 |     1 | [0,5)
+ remove-040 |     3 | [65,70)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-041 |     1 | [20,25)
+ remove-041 |     3 | [65,70)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-042 |     1 | [0,5)
+ remove-042 |     0 | [20,25)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-043 |     2 | [10,15)
+ remove-043 |     0 | [20,25)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-044 |     1 | [0,5)
+ remove-044 |     2 | [10,15)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-045 |     2 | [10,15)
+ remove-045 |     1 | [20,25)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-046 |     0 | [20,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-047 |     1 | [0,5)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-048 |     1 | [20,25)
+(1 row)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-049 |     2 | [10,15)
+ remove-049 |     0 | [20,25)
+ remove-049 |     0 | [55,60)
+ remove-049 |     3 | [65,70)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-050 |     2 | [10,15)
+ remove-050 |     0 | [20,25)
+ remove-050 |     0 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-051 |     2 | [10,15)
+ remove-051 |     0 | [20,25)
+ remove-051 |     0 | [55,60)
+ remove-051 |     4 | [75,80)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-052 |     2 | [10,15)
+ remove-052 |     0 | [20,25)
+ remove-052 |     3 | [65,70)
+ remove-052 |     4 | [75,80)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-053 |     2 | [10,15)
+ remove-053 |     0 | [20,25)
+ remove-053 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-054 |     2 | [10,15)
+ remove-054 |     0 | [20,25)
+ remove-054 |     4 | [55,60)
+ remove-054 |     3 | [65,70)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-055 |     2 | [10,15)
+ remove-055 |     0 | [20,25)
+ remove-055 |     4 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-056 |     0 | [20,25)
+ remove-056 |     0 | [55,60)
+ remove-056 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-057 |     0 | [20,25)
+ remove-057 |     0 | [55,60)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-058 |     0 | [20,25)
+ remove-058 |     0 | [55,60)
+ remove-058 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-059 |     0 | [20,25)
+ remove-059 |     3 | [65,70)
+ remove-059 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-060 |     0 | [20,25)
+ remove-060 |     4 | [75,80)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-061 |     0 | [20,25)
+ remove-061 |     4 | [55,60)
+ remove-061 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-062 |     0 | [20,25)
+ remove-062 |     4 | [55,60)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-063 |     1 | [0,5)
+ remove-063 |     0 | [20,25)
+ remove-063 |     0 | [55,60)
+ remove-063 |     3 | [65,70)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-064 |     1 | [0,5)
+ remove-064 |     0 | [20,25)
+ remove-064 |     0 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-065 |     1 | [0,5)
+ remove-065 |     0 | [20,25)
+ remove-065 |     0 | [55,60)
+ remove-065 |     4 | [75,80)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-066 |     1 | [0,5)
+ remove-066 |     0 | [20,25)
+ remove-066 |     3 | [65,70)
+ remove-066 |     4 | [75,80)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-067 |     1 | [0,5)
+ remove-067 |     0 | [20,25)
+ remove-067 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-068 |     1 | [0,5)
+ remove-068 |     0 | [20,25)
+ remove-068 |     4 | [55,60)
+ remove-068 |     3 | [65,70)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-069 |     1 | [0,5)
+ remove-069 |     0 | [20,25)
+ remove-069 |     4 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-070 |     1 | [0,5)
+ remove-070 |     2 | [10,15)
+ remove-070 |     0 | [55,60)
+ remove-070 |     3 | [65,70)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-071 |     1 | [0,5)
+ remove-071 |     2 | [10,15)
+ remove-071 |     0 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-072 |     1 | [0,5)
+ remove-072 |     2 | [10,15)
+ remove-072 |     0 | [55,60)
+ remove-072 |     4 | [75,80)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-073 |     1 | [0,5)
+ remove-073 |     2 | [10,15)
+ remove-073 |     3 | [65,70)
+ remove-073 |     4 | [75,80)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-074 |     1 | [0,5)
+ remove-074 |     2 | [10,15)
+ remove-074 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-075 |     1 | [0,5)
+ remove-075 |     2 | [10,15)
+ remove-075 |     4 | [55,60)
+ remove-075 |     3 | [65,70)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-076 |     1 | [0,5)
+ remove-076 |     2 | [10,15)
+ remove-076 |     4 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-077 |     1 | [0,5)
+ remove-077 |     0 | [55,60)
+ remove-077 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-078 |     1 | [0,5)
+ remove-078 |     0 | [55,60)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-079 |     1 | [0,5)
+ remove-079 |     0 | [55,60)
+ remove-079 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-080 |     1 | [0,5)
+ remove-080 |     3 | [65,70)
+ remove-080 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-081 |     1 | [0,5)
+ remove-081 |     4 | [75,80)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-082 |     1 | [0,5)
+ remove-082 |     4 | [55,60)
+ remove-082 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-083 |     1 | [0,5)
+ remove-083 |     4 | [55,60)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-084 |     2 | [10,15)
+ remove-084 |     1 | [20,25)
+ remove-084 |     0 | [55,60)
+ remove-084 |     3 | [65,70)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-085 |     2 | [10,15)
+ remove-085 |     1 | [20,25)
+ remove-085 |     0 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-086 |     2 | [10,15)
+ remove-086 |     1 | [20,25)
+ remove-086 |     0 | [55,60)
+ remove-086 |     4 | [75,80)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-087 |     2 | [10,15)
+ remove-087 |     1 | [20,25)
+ remove-087 |     3 | [65,70)
+ remove-087 |     4 | [75,80)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-088 |     2 | [10,15)
+ remove-088 |     1 | [20,25)
+ remove-088 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-089 |     2 | [10,15)
+ remove-089 |     1 | [20,25)
+ remove-089 |     4 | [55,60)
+ remove-089 |     3 | [65,70)
+(4 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-090 |     2 | [10,15)
+ remove-090 |     1 | [20,25)
+ remove-090 |     4 | [55,60)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-091 |     1 | [20,25)
+ remove-091 |     0 | [55,60)
+ remove-091 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-092 |     1 | [20,25)
+ remove-092 |     0 | [55,60)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-093 |     1 | [20,25)
+ remove-093 |     0 | [55,60)
+ remove-093 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-094 |     1 | [20,25)
+ remove-094 |     3 | [65,70)
+ remove-094 |     4 | [75,80)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-095 |     1 | [20,25)
+ remove-095 |     4 | [75,80)
+(2 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-096 |     1 | [20,25)
+ remove-096 |     4 | [55,60)
+ remove-096 |     3 | [65,70)
+(3 rows)
+
+     id     | value | valid_period
+------------+-------+--------------
+ remove-097 |     1 | [20,25)
+ remove-097 |     4 | [55,60)
+(2 rows)

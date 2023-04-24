@@ -3,22 +3,20 @@
 *Goal:* Provide a simple API to manage bitemporal tables on
 PostgreSQL.
 
-*Goal:* Keep the API agnostic to the range data type.
+*Goal:* Try to keep the API agnostic to the range data type.
 
-*Non goal:* Extend de PostgreSQL SQL dialect, adhering to the SQL:2011
+*Non goal:* Extend the PostgreSQL SQL dialect, adhering to the SQL:2011
 standard.
 
 ** Roadmap
 
-*** TODO [[file:docs/save.org][save]]
+*** DONE save for simple tables (no FK)
 
-*** TODO remove
-
-*** TODO select history functions
-
-*** TODO catalog
+*** DONE remove for simple tables (no FK)
 
 *** TODO foreign keys
+
+*** TODO code generator
 
 ** Installing
 

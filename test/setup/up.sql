@@ -6,26 +6,18 @@ create table s
     ( id                 text not null
     , value              int not null
     , valid_period       int4range not null
-    , transaction_period int4range not null default int4range(0, null)
     , primary key(id, valid_period)
     , exclude using gist (id with =, valid_period with &&)
-    , exclude using gist (id with =, value with =, valid_period with -|-)
-    );
+    , exclude using gist (id with =, value with =, valid_period with -|-) );
 
-create table s_history (like s);
-
-create function last_tx_time()
-returns int
-as $body$
-    select coalesce(max(x.val), 0)
-      from (select lower(transaction_period) as val from s
-             union
-            select upper(transaction_period) from s
-             union
-            select lower(transaction_period) from s_history
-             union
-            select upper(transaction_period) from s_history) x;
-$body$ language sql;
+create table sp
+    ( s_id text not null
+    , id  text not null
+    , state int not null
+    , valid_period int4range not null
+    , primary key(s_id, id, valid_period)
+    , exclude using gist(s_id with =, id with =, valid_period with &&)
+    , exclude using gist(s_id with =, id with =, state with =, valid_period with -|-) );
 
 create procedure save_s
     ( s_id           s.id%type
@@ -45,7 +37,6 @@ begin
     for r in select id
                   , value
                   , valid_period
-                  , transaction_period
                from s
               where id = s_id
                 and valid_period && s_valid_period
@@ -118,7 +109,6 @@ begin
     for r in execute format($$select x.id
                                    , x.value
                                    , x.valid_period
-                                   , x.transaction_period
                                 from s as "x"
                                where %s
                                  and x.valid_period && %s$$

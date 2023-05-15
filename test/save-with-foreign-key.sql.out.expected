@@ -1,0 +1,251 @@
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-1 | save-with-foreign-key-001 |     1 | [3,7)
+(1 row)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-2 | save-with-foreign-key-010 |     1 | [3,7)
+(1 row)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-4 | save-with-foreign-key-028 |     1 | [3,7)
+(1 row)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-4 | save-with-foreign-key-031 |     1 | [6,10)
+(1 row)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-4 | save-with-foreign-key-033 |     1 | [8,10)
+(1 row)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-4 | save-with-foreign-key-036 |     1 | [6,)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-5 | save-with-foreign-key-037 |     1 | [3,7)
+(1 row)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-5 | save-with-foreign-key-039 |     1 | [0,4)
+(1 row)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-5 | save-with-foreign-key-041 |     1 | [0,2)
+(1 row)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-5 | save-with-foreign-key-044 |     1 | (,4)
+(1 row)
+
+ s_id | id | state | valid_period 
+------+----+-------+--------------
+(0 rows)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-6 | save-with-foreign-key-046 |     1 | [3,7)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-6 | save-with-foreign-key-047 |     1 | [0,10)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-6 | save-with-foreign-key-048 |     1 | [0,4)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-6 | save-with-foreign-key-049 |     1 | [6,10)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-6 | save-with-foreign-key-050 |     1 | [0,2)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-6 | save-with-foreign-key-051 |     1 | [8,10)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-6 | save-with-foreign-key-052 |     1 | (,)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-6 | save-with-foreign-key-053 |     1 | (,4)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-6 | save-with-foreign-key-054 |     1 | [6,)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-7 | save-with-foreign-key-055 |     1 | [0,11)
+(1 row)
+
+    s_id    |            id             | state | valid_period 
+------------+---------------------------+-------+--------------
+ s-for-fk-8 | save-with-foreign-key-056 |     1 | [0,4)
+ s-for-fk-8 | save-with-foreign-key-056 |     2 | [4,7)
+ s-for-fk-8 | save-with-foreign-key-056 |     1 | [7,11)
+(3 rows)
+

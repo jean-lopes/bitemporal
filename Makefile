@@ -26,6 +26,9 @@ test: clean
 	$(PSQL_CMD) --file test/remove.sql --output test/remove.sql.out
 	diff --ignore-trailing-space --ignore-blank-lines test/remove.sql.out test/remove.sql.out.expected
 
+	$(PSQL_CMD) --file test/save-with-foreign-key.sql --output test/save-with-foreign-key.sql.out
+	diff --ignore-trailing-space --ignore-blank-lines test/save-with-foreign-key.sql.out test/save-with-foreign-key.sql.out.expected
+
 enable-debug:
 	$(PSQL_CMD) --file dev/enable-debug.sql
 

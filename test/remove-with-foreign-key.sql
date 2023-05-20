@@ -1,7 +1,7 @@
 \set QUIET 'on'
 
-delete from sp where id like 'remove-with-foreign-key-%';
-delete from s where id like 's-for-fk-%';
+truncate sp cascade;
+truncate s cascade;
 
 \echo 'remove-with-foreign-key-000'
 call save_s('s-for-fk-000', 1, '[3,6]');

@@ -1,6 +1,7 @@
 \set QUIET 'on'
 
-delete from s where id like 'save-%';
+truncate sp cascade;
+truncate s cascade;
 
 \echo 'save-000 - [empty]'
 insert into s(id, value, valid_period) values ('save-000', 1, '[0,5)');

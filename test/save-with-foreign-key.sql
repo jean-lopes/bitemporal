@@ -1,7 +1,7 @@
 \set QUIET 'on'
 
-delete from s where id like 's-for-fk-%';
-delete from sp where id like 'save-with-foreign-key-%';
+truncate sp cascade;
+truncate s cascade;
 
 insert into s(id, value, valid_period) values('s-for-fk-1', 1, '[3,6]');
 

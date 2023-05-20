@@ -1,6 +1,7 @@
 \set QUIET 'on'
 
-delete from s where id like 'remove-%';
+truncate sp cascade;
+truncate s cascade;
 
 \echo 'remove-000 - [empty]'
 insert into s(id, value, valid_period) values ('remove-000', 1, '[0,5)');

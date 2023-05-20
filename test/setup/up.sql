@@ -176,6 +176,64 @@ begin
     insert into sp(s_id, id, state, valid_period) values(sp_s_id, sp_id, sp_state, sp_valid_period);
 end; $body$ language plpgsql;
 
+create or replace procedure remove_sp
+    ( filter          text
+    , sp_valid_period sp.valid_period%type )
+as $body$
+declare
+    r   sp;
+    vps int4multirange;
+    vp  sp.valid_period%type;
+begin
+    raise debug 'remove_sp(filter=%, sp_valid_period=%)', quote_literal(filter), quote_literal(sp_valid_period);
+
+    if isempty(sp_valid_period) then
+        raise exception 'empty valid time';
+    end if;
+
+    raise debug 'checking for overlaps: (%, %)', filter, sp_valid_period;
+    for r in execute format($$select *
+                                from sp as "x"
+                               where %s
+                                 and x.valid_period && %s$$
+                           , filter
+                           , quote_literal(sp_valid_period))
+    loop
+        raise debug 'found overlapping record: (%, %, %, %)', r.s_id, r.id, r.state, r.valid_period;
+
+        vps := r.valid_period::int4multirange - sp_valid_period::int4multirange;
+        raise debug 'vps: %', vps;
+
+        raise debug 'deleting record by PK (%, %, %)', r.s_id, r.id, r.valid_period;
+        delete from sp
+              where s_id = r.s_id
+                and id = r.id
+                and valid_period = r.valid_period;
+
+        if not isempty(vps) then
+            foreach vp in array (select array_agg(x.*) from unnest(vps) x)
+            loop
+                raise debug 'inserting remaining part of overlapped record: (%, %, %, %)', r.s_id, r.id, r.state, vp;
+                insert into sp(s_id, id, state, valid_period) values(r.s_id, r.id, r.state, vp);
+            end loop;
+        end if;
+    end loop;
+end; $body$ language plpgsql;
+
+create or replace procedure remove_cascade_sp
+    ( filter         text
+    , sp_valid_period s.valid_period%type )
+as $body$
+begin
+    raise debug 'remove_cascade_sp(filter=%, sp_valid_period=%)', quote_literal(filter), quote_literal(sp_valid_period);
+
+    if isempty(sp_valid_period) then
+        raise exception 'empty valid time';
+    end if;
+
+    call remove_sp(filter, sp_valid_period);
+end; $body$ language plpgsql;
+
 create or replace procedure remove_s
     ( filter         text
     , s_valid_period s.valid_period%type )
@@ -185,6 +243,8 @@ declare
     vps int4multirange;
     vp s.valid_period%type;
 begin
+    raise debug 'remove_s(filter=%, s_valid_period=%)', quote_literal(filter), quote_literal(s_valid_period);
+
     if isempty(s_valid_period) then
         raise exception 'empty valid time';
     end if;
@@ -219,6 +279,24 @@ begin
     end loop;
 end; $body$ language plpgsql;
 
+create or replace procedure remove_cascade_s
+    ( filter         text
+    , s_valid_period s.valid_period%type )
+as $body$
+declare
+    r sp;
+begin
+    raise debug 'remove_cascade_s(filter=%, s_valid_period=%)', quote_literal(filter), quote_literal(s_valid_period);
+
+    if isempty(s_valid_period) then
+        raise exception 'empty valid time';
+    end if;
+
+    call remove_cascade_sp(format('x.s_id in (select id from s as x where %s and x.valid_period && %s)', filter, quote_literal(s_valid_period)), s_valid_period);
+
+    call remove_s(filter, s_valid_period);
+end; $body$ language plpgsql;
+
 create or replace function check_fk_s_sp()
    returns trigger
    language plpgsql
@@ -231,10 +309,15 @@ begin
                            , range_agg(valid_period) as "valid_period"
                         from s
                        group by id)
-           select sp.*
-             from x, sp
-            where x.id = sp.s_id
-              and not x.valid_period @> sp.valid_period
+         select sp.*
+           from sp, x
+          where x.id = sp.s_id
+            and not x.valid_period @> sp.valid_period
+          union all
+         select sp.*
+           from sp
+      left join x on x.id = sp.s_id
+          where x.id is null
   loop
       rs := rs || r;
   end loop;

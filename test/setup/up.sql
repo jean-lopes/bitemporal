@@ -340,3 +340,15 @@ create constraint trigger s_check_fk_sp
     initially deferred
     for each row
     execute function check_fk_s_sp();
+
+create schema bitemporal;
+
+create table bitemporal.foreign_keys
+    ( parent            regclass not null
+    , parent_columns    name[]   not null
+    , child             regclass not null
+    , child_columns     name[]   not null
+    , primary key(parent, child, child_columns) );
+
+insert into bitemporal.foreign_keys(parent, parent_columns, child, child_columns)
+values ('s', '{id}', 'sp', '{s_id}');

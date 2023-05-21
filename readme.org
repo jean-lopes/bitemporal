@@ -25,3 +25,7 @@ TBD
 ** Usage
 
 TBD
+
+*** Points of Interest (POI)
+
+this type of constraint: ~exclude using gist(s_id with =, id with =, state with =, valid_period with -|-) );~

@@ -21,18 +21,26 @@ create table sp
 
 create schema bitemporal;
 
-create procedure bitemporal.save_s
+create type bitemporal.result as
+    ( success       boolean
+    , affected_rows int
+    , messages      text[] );
+
+create function bitemporal.save_s
     ( s_id           s.id%type
     , s_value        s.value%type
     , s_valid_period s.valid_period%type )
+returns bitemporal.result
 as $body$
 declare
-    r   s;
-    vps int4multirange;
-    vp  s.valid_period%type;
+    r                   s;
+    vps                 int4multirange;
+    vp                  s.valid_period%type;
+    total_affected_rows int = 0;
+    affected_rows       int = 0;
 begin
     if isempty(s_valid_period) then
-        raise exception 'empty valid time';
+        return (false, 0, '{"empty valid_period"}')::bitemporal.result;
     end if;
 
     raise debug 'checking for overlaps: (%, %)', s_id, s_valid_period;
@@ -50,6 +58,8 @@ begin
 
         raise debug 'deleting record by PK (%, %)', r.id, r.valid_period;
         delete from s where id = r.id and valid_period = r.valid_period;
+        get diagnostics affected_rows = row_count;
+        total_affected_rows := total_affected_rows + affected_rows;
 
         if not isempty(vps) then
             foreach vp in array (select array_agg(x.*) from unnest(vps) x)
@@ -57,13 +67,14 @@ begin
                 if not isempty(vp) then
                     raise debug 'inserting unmatched part of overlapped record with period: (%, %, %)', r.id, r.value, vp;
                     insert into s(id, value, valid_period) values(r.id, r.value, vp);
+                    get diagnostics affected_rows = row_count;
+                    total_affected_rows := total_affected_rows + affected_rows;
                 end if;
             end loop;
         end if;
     end loop;
 
     raise debug 'checking for adjacency: (%, %, %)', s_id, s_value, s_valid_period;
-
     select range_agg(x.valid_period)
       into vps
       from (select s_valid_period as "valid_period"
@@ -83,15 +94,24 @@ begin
 
             raise debug 'deleting adjacents: (%, %, %)', s_id, s_value, s_valid_period;
             delete from s where id = s_id and value = s_value and valid_period -|- s_valid_period;
+            get diagnostics affected_rows = row_count;
+            total_affected_rows := total_affected_rows + affected_rows;
 
             raise debug 'inserting consolidated record: (%, %, %)', s_id, s_value, vp;
             insert into s(id, value, valid_period) values (s_id, s_value, vp);
-            return;
+            get diagnostics affected_rows = row_count;
+            total_affected_rows := total_affected_rows + affected_rows;
+
+            return (true, total_affected_rows, '{}')::bitemporal.result;
         end loop;
     end if;
 
     raise debug 'inserting desired record: (%, %, %)', s_id, s_value, s_valid_period;
     insert into s(id, value, valid_period) values(s_id, s_value, s_valid_period);
+    get diagnostics affected_rows = row_count;
+    total_affected_rows := total_affected_rows + affected_rows;
+
+    return (true, total_affected_rows, '{}')::bitemporal.result;
 end; $body$ language plpgsql;
 
 create procedure bitemporal.save_sp

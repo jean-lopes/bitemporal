@@ -1,302 +1,572 @@
-    id    | value | valid_period
+ success | affected_rows |        messages        
+---------+---------------+------------------------
+ f       |             0 | {"empty valid_period"}
+(1 row)
+
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-001 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-002 |     0 | (,55)
  save-002 |     1 | [55,)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-003 |     1 | (,25)
  save-003 |     0 | [25,)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-004 |     1 | (,25)
  save-004 |     0 | [25,55)
  save-004 |     1 | [55,)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-005 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-006 |     0 | (,55)
  save-006 |     1 | [55,80)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-007 |     1 | (,25)
  save-007 |     0 | [25,)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-008 |     1 | (,25)
  save-008 |     0 | [25,55)
  save-008 |     1 | [55,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-009 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-010 |     0 | (,55)
  save-010 |     1 | [55,)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-011 |     1 | [0,25)
  save-011 |     0 | [25,)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-012 |     1 | [0,25)
  save-012 |     0 | [25,55)
  save-012 |     1 | [55,)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-013 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-014 |     0 | (,55)
  save-014 |     1 | [55,80)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-015 |     1 | [0,25)
  save-015 |     0 | [25,)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-016 |     1 | [0,25)
  save-016 |     0 | [25,55)
  save-016 |     1 | [55,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-017 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-018 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-019 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             6 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-020 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-021 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-022 |     0 | (,80)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-023 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             6 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-024 |     0 | (,80)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-025 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-026 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-027 |     0 | [0,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             6 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-028 |     0 | [0,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-029 |     0 | (,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-030 |     0 | (,80)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-031 |     0 | [0,)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             6 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-032 |     0 | [0,80)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             1 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-033 |     0 | [25,55)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-034 |     0 | [20,55)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             1 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-035 |     1 | [0,5)
  save-035 |     0 | [25,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-036 |     1 | [20,25)
  save-036 |     0 | [25,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-037 |     1 | [0,5)
  save-037 |     0 | [20,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-038 |     2 | [10,15)
  save-038 |     0 | [20,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             1 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-039 |     1 | [0,5)
  save-039 |     2 | [10,15)
  save-039 |     0 | [25,55)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-040 |     2 | [10,15)
  save-040 |     1 | [20,25)
  save-040 |     0 | [25,55)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-041 |     0 | [20,55)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-042 |     1 | [0,5)
  save-042 |     0 | [25,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-043 |     1 | [20,25)
  save-043 |     0 | [25,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-044 |     1 | [0,5)
  save-044 |     0 | [20,60)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-045 |     2 | [10,15)
  save-045 |     0 | [20,60)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-046 |     1 | [0,5)
  save-046 |     2 | [10,15)
  save-046 |     0 | [25,60)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-047 |     2 | [10,15)
  save-047 |     1 | [20,25)
  save-047 |     0 | [25,60)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-048 |     0 | [20,60)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-049 |     1 | [0,5)
  save-049 |     0 | [25,60)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-050 |     1 | [20,25)
  save-050 |     0 | [25,60)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-051 |     1 | [0,5)
  save-051 |     0 | [20,55)
  save-051 |     3 | [65,70)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-052 |     2 | [10,15)
  save-052 |     0 | [20,55)
  save-052 |     3 | [65,70)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             1 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-053 |     1 | [0,5)
  save-053 |     2 | [10,15)
@@ -304,7 +574,12 @@
  save-053 |     3 | [65,70)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-054 |     2 | [10,15)
  save-054 |     1 | [20,25)
@@ -312,90 +587,160 @@
  save-054 |     3 | [65,70)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-055 |     0 | [20,55)
  save-055 |     3 | [65,70)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-056 |     1 | [0,5)
  save-056 |     0 | [25,55)
  save-056 |     3 | [65,70)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-057 |     1 | [20,25)
  save-057 |     0 | [25,55)
  save-057 |     3 | [65,70)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-058 |     1 | [0,5)
  save-058 |     0 | [20,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-059 |     2 | [10,15)
  save-059 |     0 | [20,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-060 |     1 | [0,5)
  save-060 |     2 | [10,15)
  save-060 |     0 | [25,55)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-061 |     2 | [10,15)
  save-061 |     1 | [20,25)
  save-061 |     0 | [25,55)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-062 |     0 | [20,55)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-063 |     1 | [0,5)
  save-063 |     0 | [25,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-064 |     1 | [20,25)
  save-064 |     0 | [25,55)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-065 |     2 | [10,15)
  save-065 |     0 | [20,60)
  save-065 |     3 | [65,70)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-066 |     2 | [10,15)
  save-066 |     0 | [20,60)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-067 |     2 | [10,15)
  save-067 |     0 | [20,60)
  save-067 |     4 | [75,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-068 |     2 | [10,15)
  save-068 |     0 | [20,55)
@@ -403,14 +748,24 @@
  save-068 |     4 | [75,80)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-069 |     2 | [10,15)
  save-069 |     0 | [20,55)
  save-069 |     4 | [75,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-070 |     2 | [10,15)
  save-070 |     0 | [20,55)
@@ -418,77 +773,137 @@
  save-070 |     3 | [65,70)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-071 |     2 | [10,15)
  save-071 |     0 | [20,55)
  save-071 |     4 | [55,60)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-072 |     0 | [20,60)
  save-072 |     3 | [65,70)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-073 |     0 | [20,60)
 (1 row)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-074 |     0 | [20,60)
  save-074 |     4 | [75,80)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-075 |     0 | [20,55)
  save-075 |     3 | [65,70)
  save-075 |     4 | [75,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-076 |     0 | [20,55)
  save-076 |     4 | [75,80)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-077 |     0 | [20,55)
  save-077 |     4 | [55,60)
  save-077 |     3 | [65,70)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             6 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-078 |     0 | [20,55)
  save-078 |     4 | [55,60)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-079 |     1 | [0,5)
  save-079 |     0 | [20,60)
  save-079 |     3 | [65,70)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-080 |     1 | [0,5)
  save-080 |     0 | [20,60)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-081 |     1 | [0,5)
  save-081 |     0 | [20,60)
  save-081 |     4 | [75,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-082 |     1 | [0,5)
  save-082 |     0 | [20,55)
@@ -496,14 +911,24 @@
  save-082 |     4 | [75,80)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-083 |     1 | [0,5)
  save-083 |     0 | [20,55)
  save-083 |     4 | [75,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-084 |     1 | [0,5)
  save-084 |     0 | [20,55)
@@ -511,14 +936,24 @@
  save-084 |     3 | [65,70)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-085 |     1 | [0,5)
  save-085 |     0 | [20,55)
  save-085 |     4 | [55,60)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-086 |     1 | [0,5)
  save-086 |     2 | [10,15)
@@ -526,14 +961,24 @@
  save-086 |     3 | [65,70)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-087 |     1 | [0,5)
  save-087 |     2 | [10,15)
  save-087 |     0 | [25,60)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-088 |     1 | [0,5)
  save-088 |     2 | [10,15)
@@ -541,7 +986,12 @@
  save-088 |     4 | [75,80)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             1 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-089 |     1 | [0,5)
  save-089 |     2 | [10,15)
@@ -550,7 +1000,12 @@
  save-089 |     4 | [75,80)
 (5 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-090 |     1 | [0,5)
  save-090 |     2 | [10,15)
@@ -558,7 +1013,12 @@
  save-090 |     4 | [75,80)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-091 |     1 | [0,5)
  save-091 |     2 | [10,15)
@@ -567,7 +1027,12 @@
  save-091 |     3 | [65,70)
 (5 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-092 |     1 | [0,5)
  save-092 |     2 | [10,15)
@@ -575,27 +1040,47 @@
  save-092 |     4 | [55,60)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-093 |     1 | [0,5)
  save-093 |     0 | [25,60)
  save-093 |     3 | [65,70)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-094 |     1 | [0,5)
  save-094 |     0 | [25,60)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-095 |     1 | [0,5)
  save-095 |     0 | [25,60)
  save-095 |     4 | [75,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             2 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-096 |     1 | [0,5)
  save-096 |     0 | [25,55)
@@ -603,14 +1088,24 @@
  save-096 |     4 | [75,80)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-097 |     1 | [0,5)
  save-097 |     0 | [25,55)
  save-097 |     4 | [75,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-098 |     1 | [0,5)
  save-098 |     0 | [25,55)
@@ -618,14 +1113,24 @@
  save-098 |     3 | [65,70)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-099 |     1 | [0,5)
  save-099 |     0 | [25,55)
  save-099 |     4 | [55,60)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-100 |     2 | [10,15)
  save-100 |     1 | [20,25)
@@ -633,14 +1138,24 @@
  save-100 |     3 | [65,70)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-101 |     2 | [10,15)
  save-101 |     1 | [20,25)
  save-101 |     0 | [25,60)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-102 |     2 | [10,15)
  save-102 |     1 | [20,25)
@@ -648,7 +1163,12 @@
  save-102 |     4 | [75,80)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             3 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-103 |     2 | [10,15)
  save-103 |     1 | [20,25)
@@ -657,7 +1177,12 @@
  save-103 |     4 | [75,80)
 (5 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-104 |     2 | [10,15)
  save-104 |     1 | [20,25)
@@ -665,7 +1190,12 @@
  save-104 |     4 | [75,80)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-105 |     2 | [10,15)
  save-105 |     1 | [20,25)
@@ -674,7 +1204,12 @@
  save-105 |     3 | [65,70)
 (5 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             6 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-106 |     2 | [10,15)
  save-106 |     1 | [20,25)
@@ -682,27 +1217,47 @@
  save-106 |     4 | [55,60)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-107 |     1 | [20,25)
  save-107 |     0 | [25,60)
  save-107 |     3 | [65,70)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             6 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-108 |     1 | [20,25)
  save-108 |     0 | [25,60)
 (2 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-109 |     1 | [20,25)
  save-109 |     0 | [25,60)
  save-109 |     4 | [75,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             4 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-110 |     1 | [20,25)
  save-110 |     0 | [25,55)
@@ -710,14 +1265,24 @@
  save-110 |     4 | [75,80)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             5 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-111 |     1 | [20,25)
  save-111 |     0 | [25,55)
  save-111 |     4 | [75,80)
 (3 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             6 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-112 |     1 | [20,25)
  save-112 |     0 | [25,55)
@@ -725,9 +1290,15 @@
  save-112 |     3 | [65,70)
 (4 rows)
 
-    id    | value | valid_period
+ success | affected_rows | messages 
+---------+---------------+----------
+ t       |             7 | {}
+(1 row)
+
+    id    | value | valid_period 
 ----------+-------+--------------
  save-113 |     1 | [20,25)
  save-113 |     0 | [25,55)
  save-113 |     4 | [55,60)
 (3 rows)
+

@@ -1,8 +1,3 @@
- success | affected_rows | messages 
----------+---------------+----------
- t       |             1 | {}
-(1 row)
-
       id      | value | valid_period 
 --------------+-------+--------------
  s-for-fk-000 |     1 | [3,7)
@@ -13,11 +8,6 @@
  s-for-fk-000 | remove-with-foreign-key-000 |     0 | [3,7)
 (1 row)
 
- success | affected_rows | messages 
----------+---------------+----------
- t       |             1 | {}
-(1 row)
-
  id | value | valid_period 
 ----+-------+--------------
 (0 rows)
@@ -25,21 +15,6 @@
  s_id | id | state | valid_period 
 ------+----+-------+--------------
 (0 rows)
-
- success | affected_rows | messages 
----------+---------------+----------
- t       |             1 | {}
-(1 row)
-
- success | affected_rows | messages 
----------+---------------+----------
- t       |             1 | {}
-(1 row)
-
- success | affected_rows | messages 
----------+---------------+----------
- t       |             1 | {}
-(1 row)
 
       id      | value | valid_period 
 --------------+-------+--------------
@@ -51,21 +26,6 @@
      s_id     |             id              | state | valid_period 
 --------------+-----------------------------+-------+--------------
  s-for-fk-002 | remove-with-foreign-key-002 |     0 | [2,8)
-(1 row)
-
- success | affected_rows | messages 
----------+---------------+----------
- t       |             1 | {}
-(1 row)
-
- success | affected_rows | messages 
----------+---------------+----------
- t       |             1 | {}
-(1 row)
-
- success | affected_rows | messages 
----------+---------------+----------
- t       |             1 | {}
 (1 row)
 
       id      | value | valid_period 

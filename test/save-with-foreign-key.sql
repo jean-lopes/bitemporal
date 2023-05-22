@@ -238,13 +238,13 @@ call bitemporal.save_sp('s-for-fk-6', 'save-with-foreign-key-054', 1, '[6,)');
 select s_id, id, state, valid_period from sp where id = 'save-with-foreign-key-054' order by valid_period;
 
 \echo 'save-with-foreign-key-055'
-select * from bitemporal.save_s('s-for-fk-7', 1, '[0,10]');
+call bitemporal.save_s('s-for-fk-7', 1, '[0,10]');
 call bitemporal.save_sp('s-for-fk-7', 'save-with-foreign-key-055', 1, '[0,10]');
-select * from bitemporal.save_s('s-for-fk-7', 2, '[4,6]');
+call bitemporal.save_s('s-for-fk-7', 2, '[4,6]');
 select s_id, id, state, valid_period from sp where id = 'save-with-foreign-key-055' order by valid_period;
 
 \echo 'save-with-foreign-key-056'
-select * from bitemporal.save_s('s-for-fk-8', 1, '[0,10]');
+call bitemporal.save_s('s-for-fk-8', 1, '[0,10]');
 call bitemporal.save_sp('s-for-fk-8', 'save-with-foreign-key-056', 1, '[0,10]');
 call bitemporal.save_sp('s-for-fk-8', 'save-with-foreign-key-056', 2, '[4,6]');
 select s_id, id, state, valid_period from sp where id = 'save-with-foreign-key-056' order by valid_period;

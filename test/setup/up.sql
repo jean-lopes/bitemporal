@@ -388,6 +388,15 @@ begin
     return null;
 end; $body$;
 
+create or replace function sample_history.truncate_history()
+returns trigger
+language plpgsql
+as $body$
+begin
+    execute format('truncate %s_history.%s', tg_table_schema, tg_table_name);
+    return null;
+end; $body$;
+
 create trigger s_history_upt
     after update on sample.s
     referencing old table as old_table
@@ -399,6 +408,11 @@ create trigger s_history_del
     referencing old table as old_table
     for each statement
     execute function sample_history.log_history_s();
+
+create trigger s_truncate_history
+    after truncate on sample.s
+    for each statement
+    execute function sample_history.truncate_history();
 
 create or replace function sample_history.set_system_period_s()
 returns trigger

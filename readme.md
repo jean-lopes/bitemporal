@@ -1,52 +1,54 @@
+
 # Table of Contents
 
-1.  [PostgreSQL Temporal Extension](#orga32017f)
-    1.  [Roadmap](#org8d2ade6)
-        1.  [save for simple tables (no FK)](#orgdd3be36)
-        2.  [remove for simple tables (no FK)](#org512e618)
-        3.  [foreign keys](#org778cb09)
-        4.  [system-time stuff](#orgd45cf8d)
-        5.  [code generator](#orgab40781)
-        6.  [Points of Interest (POI)](#orgf80d1f8)
+1.  [Bitemporal](#org3c536c1)
+    1.  [Roadmap](#org219b889)
+        1.  [save for simple tables (no FK)](#org2e53052)
+        2.  [remove for simple tables (no FK)](#org4ccc8bb)
+        3.  [foreign keys](#org0e3aa3d)
+        4.  [system-time stuff](#org9d810d1)
+        5.  [code generator](#org2c7b089)
+    2.  [Points of Interest (POI)](#org5b99fc6)
 
 
-<a id="orga32017f"></a>
+<a id="org3c536c1"></a>
 
-# PostgreSQL Temporal Extension
+# Bitemporal
 
 
-<a id="org8d2ade6"></a>
+<a id="org219b889"></a>
 
 ## Roadmap
 
 
-<a id="orgdd3be36"></a>
+<a id="org2e53052"></a>
 
 ### DONE save for simple tables (no FK)
 
 
-<a id="org512e618"></a>
+<a id="org4ccc8bb"></a>
 
 ### DONE remove for simple tables (no FK)
 
 
-<a id="org778cb09"></a>
+<a id="org0e3aa3d"></a>
 
 ### DONE foreign keys
 
 
-<a id="orgd45cf8d"></a>
+<a id="org9d810d1"></a>
 
-### TODO system-time stuff
+### DONE system-time stuff
 
 
-<a id="orgab40781"></a>
+<a id="org2c7b089"></a>
 
 ### TODO code generator
 
 
-<a id="orgf80d1f8"></a>
+<a id="org5b99fc6"></a>
 
-### Points of Interest (POI)
+## Points of Interest (POI)
 
-this type of constraint: `exclude using gist(s_id with =, id with =, state with =, valid_period with -|-) );`
+this type of constraint: `exclude using gist(s_id with =, id with =, state with =, valid_period with -|-)`
+

@@ -1,4 +1,4 @@
-* PostgreSQL Temporal Extension
+* Bitemporal
 
 ** Roadmap
 
@@ -8,10 +8,10 @@
 
 *** DONE foreign keys
 
-*** TODO system-time stuff
+*** DONE system-time stuff
 
 *** TODO code generator
 
-*** Points of Interest (POI)
+** Points of Interest (POI)
 
-this type of constraint: ~exclude using gist(s_id with =, id with =, state with =, valid_period with -|-) );~
+this type of constraint: ~exclude using gist(s_id with =, id with =, state with =, valid_period with -|-)~

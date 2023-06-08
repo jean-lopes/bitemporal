@@ -1,25 +1,15 @@
 PSQL_CMD ?= psql -U postgres
 
-.PHONY: clean test enable-debug disable-debug
+.PHONY: clean reset test enable-debug disable-debug
 
 clean:
 	rm -f test/*.out
 	$(PSQL_CMD) --file test/setup/down.sql
 
-generate-tests:
-	$(PSQL_CMD) --file test/setup/generate-save.sql --tuples-only \
-		| sed -e 's/\\n/\n/g' \
-		| tail --bytes=+2 \
-		> test/generated-save.sql
-
-	$(PSQL_CMD) --file test/setup/generate-remove.sql --tuples-only \
-		| sed -e 's/\\n/\n/g' \
-		| tail --bytes=+2 \
-		> test/generated-remove.sql
-
-test: clean
+reset: clean
 	$(PSQL_CMD) --file test/setup/up.sql
 
+test: reset
 	$(PSQL_CMD) --file test/save.sql --output test/save.sql.out
 	diff --ignore-trailing-space --ignore-blank-lines test/save.sql.out test/save.sql.out.expected
 

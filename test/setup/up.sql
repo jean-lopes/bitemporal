@@ -8,6 +8,7 @@ create table sample.s
     ( id                text not null
     , value             int not null
     , valid_period      int4range not null
+    , system_period     int4range not null
     , primary key(id, valid_period)
     , exclude using gist (id with =, valid_period with &&)
     , exclude using gist (id with =, value with =, valid_period with -|-) );
@@ -356,60 +357,66 @@ create table bitemporal.foreign_keys
 insert into bitemporal.foreign_keys(parent, parent_columns, child, child_columns)
 values ('sample.s', '{id}', 'sample.sp', '{s_id}');
 
--- create schema sample_history;
+create schema sample_history;
 
--- create table sample_history.s (like s);
+create table sample_history.s (like sample.s);
 
--- create table sample_history.sp (like sp);
+create table sample_history.sp (like sample.sp);
 
--- create sequence sample_history.system_time increment by 1
---     minvalue 0
---     start  with 0;
+create sequence sample_history.system_time increment by 1
+    minvalue 0
+    start  with 0;
 
+create or replace function sample_history.log_history_s()
+returns trigger
+language plpgsql
+as $body$
+declare
+    t int;
+begin
+    select last_value into t from sample_history.system_time;
+    raise debug 'sample_history.log_history_s()@%', t;
 
--- create or replace function sample_history.log_history_s()
--- returns trigger
--- language plpgsql
--- as $body$
--- declare
---     t int;
--- begin
---     select nextval('sample_history.system_time')::int into t;
+    insert into sample_history.s(id, value, valid_period, system_period)
+    select id
+         , value
+         , valid_period
+         , int4range( lower(system_period)
+                    , (select nextval('sample_history.system_time')::int) )
+      from old_table;
 
---     insert into history.s(id, value, valid_period, system_period)
---     select id
---          , value
---          , valid_period
---          , int4range(lower(system_period), t)
---       from old_table;
+    return null;
+end; $body$;
 
---     return null;
--- end; $body$;
+create trigger s_history_upt
+    after update on sample.s
+    referencing old table as old_table
+    for each statement
+    execute function sample_history.log_history_s();
 
--- create trigger s_history_upt
---     after update on sample.s
---     referencing old table as old_table
---     for each statement
---     execute function history.log_history_s();
+create trigger s_history_del
+    after delete on sample.s
+    referencing old table as old_table
+    for each statement
+    execute function sample_history.log_history_s();
 
--- create trigger s_history_del
---     after delete on sample.s
---     referencing old table as old_table
---     for each statement
---     execute function history.test();
+create or replace function sample_history.set_system_period_s()
+returns trigger
+language plpgsql
+as $body$
+declare
+    t int;
+begin
+    select last_value into t from sample_history.system_time;
+    raise debug 'sample_history.set_system_period_s(%)@%', new, t;
 
--- create or replace function sample_history.set_system_period_s()
--- returns trigger
--- language plpgsql
--- as $body$
--- begin
---     select int4range((select nextval('bitemporal.system_time')::int), null)
---     into new.system_period;
+    select int4range((select nextval('sample_history.system_time')::int), null)
+    into new.system_period;
 
---     return new;
--- end; $body$;
+    return new;
+end; $body$;
 
--- create trigger s_system_time_before
---     before insert or update on sample.s
---     for each row
---     execute function history.set_system_period_s();
+create trigger s_system_time_before
+    before insert or update on sample.s
+    for each row
+    execute function sample_history.set_system_period_s();

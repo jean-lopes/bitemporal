@@ -363,6 +363,15 @@ create table sample_history.s (like sample.s);
 
 create table sample_history.sp (like sample.sp);
 
+create or replace function sample_history.truncate_history()
+returns trigger
+language plpgsql
+as $body$
+begin
+    execute format('truncate %s_history.%s', tg_table_schema, tg_table_name);
+    return null;
+end; $body$;
+
 create sequence sample_history.system_time increment by 1
     minvalue 0
     start  with 0;
@@ -385,15 +394,6 @@ begin
                     , (select nextval('sample_history.system_time')::int) )
       from old_table;
 
-    return null;
-end; $body$;
-
-create or replace function sample_history.truncate_history()
-returns trigger
-language plpgsql
-as $body$
-begin
-    execute format('truncate %s_history.%s', tg_table_schema, tg_table_name);
     return null;
 end; $body$;
 

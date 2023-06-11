@@ -22,9 +22,7 @@ create table sample.sp
     , exclude using gist(s_id with =, id with =, valid_period with &&)
     , exclude using gist(s_id with =, id with =, state with =, valid_period with -|-) );
 
-create schema bitemporal;
-
-create procedure bitemporal.save_s
+create procedure sample.save_s
     ( s_id           sample.s.id%type
     , s_value        sample.s.value%type
     , s_valid_period sample.s.valid_period%type )
@@ -98,7 +96,7 @@ begin
     insert into sample.s(id, value, valid_period) values(s_id, s_value, s_valid_period);
 end; $body$ language plpgsql;
 
-create procedure bitemporal.save_sp
+create procedure sample.save_sp
     ( sp_s_id         sample.sp.s_id%type
     , sp_id           sample.sp.id%type
     , sp_state        sample.sp.state%type
@@ -182,7 +180,7 @@ begin
     insert into sample.sp(s_id, id, state, valid_period) values(sp_s_id, sp_id, sp_state, sp_valid_period);
 end; $body$ language plpgsql;
 
-create or replace procedure bitemporal.remove_sp
+create or replace procedure sample.remove_sp
     ( filter          text
     , sp_valid_period sample.sp.valid_period%type )
 as $body$
@@ -191,7 +189,7 @@ declare
     vps int4multirange;
     vp  sample.sp.valid_period%type;
 begin
-    raise debug 'bitemporal.remove_sp(filter=%, sp_valid_period=%)', quote_literal(filter), quote_literal(sp_valid_period);
+    raise debug 'sample.remove_sp(filter=%, sp_valid_period=%)', quote_literal(filter), quote_literal(sp_valid_period);
 
     if isempty(sp_valid_period) then
         raise exception 'empty valid time';
@@ -226,21 +224,21 @@ begin
     end loop;
 end; $body$ language plpgsql;
 
-create or replace procedure bitemporal.remove_cascade_sp
+create or replace procedure sample.remove_cascade_sp
     ( filter          text
     , sp_valid_period sample.s.valid_period%type )
 as $body$
 begin
-    raise debug 'bitemporal.remove_cascade_sp(filter=%, sp_valid_period=%)', quote_literal(filter), quote_literal(sp_valid_period);
+    raise debug 'sample.remove_cascade_sp(filter=%, sp_valid_period=%)', quote_literal(filter), quote_literal(sp_valid_period);
 
     if isempty(sp_valid_period) then
         raise exception 'empty valid time';
     end if;
 
-    call bitemporal.remove_sp(filter, sp_valid_period);
+    call sample.remove_sp(filter, sp_valid_period);
 end; $body$ language plpgsql;
 
-create or replace procedure bitemporal.remove_s
+create or replace procedure sample.remove_s
     ( filter         text
     , s_valid_period sample.s.valid_period%type )
 as $body$
@@ -249,7 +247,7 @@ declare
     vps int4multirange;
     vp  sample.s.valid_period%type;
 begin
-    raise debug 'bitemporal.remove_s(filter=%, s_valid_period=%)', quote_literal(filter), quote_literal(s_valid_period);
+    raise debug 'sample.remove_s(filter=%, s_valid_period=%)', quote_literal(filter), quote_literal(s_valid_period);
 
     if isempty(s_valid_period) then
         raise exception 'empty valid time';
@@ -285,25 +283,25 @@ begin
     end loop;
 end; $body$ language plpgsql;
 
-create or replace procedure bitemporal.remove_cascade_s
+create or replace procedure sample.remove_cascade_s
     ( filter         text
     , s_valid_period sample.s.valid_period%type )
 as $body$
 declare
     r sample.sp;
 begin
-    raise debug 'bitemporal.remove_cascade_s(filter=%, s_valid_period=%)', quote_literal(filter), quote_literal(s_valid_period);
+    raise debug 'sample.remove_cascade_s(filter=%, s_valid_period=%)', quote_literal(filter), quote_literal(s_valid_period);
 
     if isempty(s_valid_period) then
         raise exception 'empty valid time';
     end if;
 
-    call bitemporal.remove_cascade_sp(format('x.s_id in (select id from sample.s as x where %s and x.valid_period && %s)', filter, quote_literal(s_valid_period)), s_valid_period);
+    call sample.remove_cascade_sp(format('x.s_id in (select id from sample.s as x where %s and x.valid_period && %s)', filter, quote_literal(s_valid_period)), s_valid_period);
 
-    call bitemporal.remove_s(filter, s_valid_period);
+    call sample.remove_s(filter, s_valid_period);
 end; $body$ language plpgsql;
 
-create or replace function bitemporal.check_fk_s_sp()
+create or replace function sample.check_fk_s_sp()
    returns trigger
    language plpgsql
 as $body$
@@ -339,13 +337,15 @@ create constraint trigger sp_check_fk_s
     after insert or update or delete on sample.sp
     initially deferred
     for each row
-    execute function bitemporal.check_fk_s_sp();
+    execute function sample.check_fk_s_sp();
 
 create constraint trigger s_check_fk_sp
     after insert or update or delete on sample.s
     initially deferred
     for each row
-    execute function bitemporal.check_fk_s_sp();
+    execute function sample.check_fk_s_sp();
+
+create schema bitemporal;
 
 create table bitemporal.foreign_keys
     ( parent            regclass not null

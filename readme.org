@@ -11,7 +11,22 @@
 *** DONE system-time stuff
 
 *** TODO code generator
+**** TODO bitemporal.diagnostics
+***** TODO list bitemporal tables
+***** TODO list ignored tables with reason
+***** TODO list bitemporal tables missing exclude constraints
+**** TODO bitemporal.ignore_tables(regclass): exclude this tables from code generation
+**** TODO system-time procedures
+**** TODO system-time triggers
+**** TODO valid-time triggers
+**** TODO valid-time procedures
 
 ** Points of Interest (POI)
 
 this type of constraint: ~exclude using gist(s_id with =, id with =, state with =, valid_period with -|-)~
+
+https://www.postgresql.org/docs/current/rangetypes.html
+
+https://www.postgresql.org/docs/current/sql-createfunction.html
+- leakproof
+- parallel, on non integer ranges it seems we can do parallel functions

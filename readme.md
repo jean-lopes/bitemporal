@@ -1,54 +1,79 @@
 
 # Table of Contents
 
-1.  [Bitemporal](#org3c536c1)
-    1.  [Roadmap](#org219b889)
-        1.  [save for simple tables (no FK)](#org2e53052)
-        2.  [remove for simple tables (no FK)](#org4ccc8bb)
-        3.  [foreign keys](#org0e3aa3d)
-        4.  [system-time stuff](#org9d810d1)
-        5.  [code generator](#org2c7b089)
-    2.  [Points of Interest (POI)](#org5b99fc6)
+1.  [Bitemporal](#org361bf34)
+    1.  [Roadmap](#orga029d02)
+        1.  [save for simple tables (no FK)](#org07c3230)
+        2.  [remove for simple tables (no FK)](#orgbf18f9a)
+        3.  [foreign keys](#org10e238a)
+        4.  [system-time stuff](#org481adf4)
+        5.  [code generator](#org87ef34e)
+    2.  [Points of Interest (POI)](#orgb46c144)
 
 
-<a id="org3c536c1"></a>
+<a id="org361bf34"></a>
 
 # Bitemporal
 
 
-<a id="org219b889"></a>
+<a id="orga029d02"></a>
 
 ## Roadmap
 
 
-<a id="org2e53052"></a>
+<a id="org07c3230"></a>
 
 ### DONE save for simple tables (no FK)
 
 
-<a id="org4ccc8bb"></a>
+<a id="orgbf18f9a"></a>
 
 ### DONE remove for simple tables (no FK)
 
 
-<a id="org0e3aa3d"></a>
+<a id="org10e238a"></a>
 
 ### DONE foreign keys
 
 
-<a id="org9d810d1"></a>
+<a id="org481adf4"></a>
 
 ### DONE system-time stuff
 
 
-<a id="org2c7b089"></a>
+<a id="org87ef34e"></a>
 
 ### TODO code generator
 
+1.  TODO bitemporal.diagnostics
 
-<a id="org5b99fc6"></a>
+    1.  TODO list bitemporal tables
+    
+    2.  TODO list ignored tables with reason
+    
+    3.  TODO list bitemporal tables missing exclude constraints
+
+2.  TODO bitemporal.ignore<sub>tables</sub>(regclass): exclude this tables from code generation
+
+3.  TODO system-time procedures
+
+4.  TODO system-time triggers
+
+5.  TODO valid-time triggers
+
+6.  TODO valid-time procedures
+
+
+<a id="orgb46c144"></a>
 
 ## Points of Interest (POI)
 
 this type of constraint: `exclude using gist(s_id with =, id with =, state with =, valid_period with -|-)`
+
+<https://www.postgresql.org/docs/current/rangetypes.html>
+
+<https://www.postgresql.org/docs/current/sql-createfunction.html>
+
+-   leakproof
+-   parallel, on non integer ranges it seems we can do parallel functions
 

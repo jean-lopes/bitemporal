@@ -58,21 +58,7 @@ values ('valid_period', 'integer', 'system_period', 'integer', '', false);
 
 /
 
-create type bitemporal.temporal_table_error
-    as enum ( 'missing-valid-time'
-            , 'wrong-valid-time-range-type'
-            , 'nullable-valid-time'
-            , 'missing-system-time'
-            , 'wrong-system-time-range-type'
-            , 'nullable-system-time'
-            , 'missing-primary-key' --TODO
-            , 'missing-valid-time-on-primary-key' --TODO
-            , 'missing-exclude-overlapped-constraint' --TODO
-            , 'missing-exclude-adjacency-constraint' --TODO
-            , 'missing-history-table' --TODO
-            , 'history-table-not-like-main-table' --TODO
-            );
-            -- TODO: foreign key erros?
+
 /
 create table sample.ok
     ( id                int not null
@@ -149,31 +135,60 @@ create table sample.system_time_with_wrong_type
     , exclude using gist (id with =, id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 /
+create type bitemporal.table_error
+    as enum ( 'missing-valid-time'
+            , 'wrong-valid-time-range-type'
+            , 'nullable-valid-time'
+            , 'missing-system-time'
+            , 'wrong-system-time-range-type'
+            , 'nullable-system-time'
+            , 'missing-primary-key' --TODO
+            , 'missing-valid-time-on-primary-key' --TODO
+            , 'missing-exclude-overlapped-constraint' --TODO
+            , 'missing-exclude-adjacency-constraint' --TODO
+            , 'missing-history-table' --TODO
+            , 'history-table-not-like-main-table' --TODO
+            , 'invalid-table-type' --TODO information_schema.tables.type
+            , 'table-not-found'
+            );
+            -- TODO: foreign key erros?
+/
 DROP FUNCTION bitemporal.check_valid_time_on_table(name,name);
+/
+
 /
 delimiter @@@
 
-create or replace function bitemporal.check_valid_time_on_table
+create or replace function bitemporal.check_table
     ( sch name
     , tbl name )
-returns table ( error bitemporal.temporal_table_error )
+returns table ( error bitemporal.table_error )
 language plpgsql
 stable
 as $body$
 declare
-    p      bitemporal.params;
-    r      record;
-    errors bitemporal.temporal_table_error[] default '{}';
+    p bitemporal.params;
+    r record;
+    t information_schema.tables;
 begin
-    -- check if tables exists and have select privileges
-    execute format('select * from %s.%s where 1=2', sch, tbl);
-
     select *
       into p
       from bitemporal.params;
 
     if not found then
         raise exception 'empty table bitemporal.params';
+    end if;
+
+    select *
+      into t
+      from information_schema.tables
+     where table_schema = sch
+       and table_name = tbl;
+
+    if not found then
+        error := 'table-not-found';
+        return next;
+        return;
     end if;
 
     select c.column_name
@@ -186,15 +201,18 @@ begin
        and c.column_name = p.valid_time_name;
 
     if not found then
-        errors := errors || '{missing-valid-time}';
+        error := 'missing-valid-time';
+        return next;
     end if;
 
     if found and r.is_nullable <> 'NO' then
-        errors := errors || '{nullable-valid-time}';
+        error := 'nullable-valid-time';
+        return next;
     end if;
 
     if found and r.data_type <> bitemporal.get_range_type(p.valid_time_type) then
-        errors := errors || '{wrong-valid-time-range-type}';
+        error := 'wrong-valid-time-range-type';
+        return next;
     end if;
 
     select c.column_name
@@ -207,22 +225,25 @@ begin
        and c.column_name = p.system_time_name;
 
     if not found then
-        errors := errors || '{missing-system-time}';
+        error := 'missing-system-time';
+        return next;
     end if;
 
     if found and r.is_nullable <> 'NO' then
-        errors := errors || '{nullable-system-time}';
+        error := 'nullable-system-time';
+        return next;
     end if;
 
     if found and r.data_type <> bitemporal.get_range_type(p.system_time_type) then
-        errors := errors || '{wrong-system-time-range-type}';
+        error := 'wrong-system-time-range-type';
+        return next;
     end if;
 
-    return query select unnest(errors);
+    return;
 end; $body$;
 @@@
 /
-select * from bitemporal.check_valid_time_on_table('sample', 'system_time_with_wrong_type2');
+select * from bitemporal.check_table('sample', 'ok');
 /
 
 create or replace function bitemporal.has_valid_time
@@ -253,3 +274,4 @@ where table_schema = 'sample'
 /
 select * from information_schema.columns
 where table_schema = 'sample' and table_name = 'nullable_valid_time';
+/

@@ -434,3 +434,75 @@ create trigger s_system_time_before
     before insert or update on sample.s
     for each row
     execute function sample_history.set_system_period_s();
+
+create type bitemporal.range_type
+    as enum ( 'integer'
+            , 'bigint'
+            , 'numeric'
+            , 'timestamp'
+            , 'timestamptz'
+            , 'date' );
+
+create or replace function bitemporal.get_range_type
+    ( range_type bitemporal.range_type )
+    returns text
+    language sql
+    immutable
+    returns null on null input
+    return case range_type
+               when 'integer'      then 'int4range'
+               when 'bigint'       then 'int8range'
+               when 'numeric'      then 'numrange'
+               when 'timestamp'    then 'tsrange'
+               when 'timestamptz'  then 'tstzrange'
+               when 'date'         then 'daterange'
+           end;
+
+create or replace function bitemporal.get_multirange_type
+    ( range_type bitemporal.range_type )
+    returns text
+    language sql
+    immutable
+    returns null on null input
+    return case range_type
+                when 'integer'      then 'int4multirange'
+                when 'bigint'       then 'int8multirange'
+                when 'numeric'      then 'nummultirange'
+                when 'timestamp'    then 'tsmultirange'
+                when 'timestamptz'  then 'tstzmultirange'
+                when 'date'         then 'datemultirange'
+              end;
+
+create table bitemporal.params
+    ( id                            boolean generated always as (true) stored unique --make this table accept only one row :)
+    , valid_time_name               name
+    , valid_time_type               bitemporal.range_type not null
+    , valid_time_range              text not null generated always as (bitemporal.get_range_type(valid_time_type)) stored
+    , valid_time_multirange         text not null generated always as (bitemporal.get_multirange_type(valid_time_type)) stored
+    , system_time_name              name
+    , system_time_type              bitemporal.range_type not null
+    , system_time_range             text not null generated always as (bitemporal.get_range_type(system_time_type)) stored
+    , system_time_multirange        text not null generated always as (bitemporal.get_multirange_type(system_time_type)) stored
+    , system_time_current_time_fn   text not null
+    , debug                         boolean not null );
+
+insert into bitemporal.params(valid_time_name, valid_time_type, system_time_name, system_time_type, system_time_current_time_fn, debug)
+values ('valid_period', 'integer', 'system_period', 'integer', '', false);
+
+create type bitemporal.table_error
+    as enum ( 'missing-valid-time'
+            , 'wrong-valid-time-range-type'
+            , 'nullable-valid-time'
+            , 'missing-system-time'
+            , 'wrong-system-time-range-type'
+            , 'nullable-system-time'
+            , 'missing-primary-key'
+            , 'missing-valid-time-on-primary-key'
+            , 'missing-exclude-overlapped-constraint' --TODO
+            , 'missing-exclude-adjacency-constraint' --TODO
+            , 'missing-history-table' --TODO
+            , 'history-table-not-like-main-table' --TODO
+            , 'invalid-table-type' --TODO information_schema.tables.type
+            , 'table-not-found'
+            );
+            -- TODO: foreign key erros?

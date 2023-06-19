@@ -22,6 +22,9 @@ test: reset
 	$(PSQL_CMD) --file test/remove-with-foreign-key.sql --output test/remove-with-foreign-key.sql.out
 	diff --ignore-trailing-space --ignore-blank-lines test/remove-with-foreign-key.sql.out test/remove-with-foreign-key.sql.out.expected
 
+	$(PSQL_CMD) --file test/validate-overlap-constraint.sql --output test/validate-overlap-constraint.sql.out
+	diff --ignore-trailing-space --ignore-blank-lines test/validate-overlap-constraint.sql.out test/validate-overlap-constraint.sql.out.expected
+
 enable-debug:
 	$(PSQL_CMD) --file dev/enable-debug.sql
 

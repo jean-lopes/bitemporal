@@ -2,7 +2,8 @@ delimiter @@@
 create or replace function bitemporal.check_table
     ( sch name
     , tbl name )
-returns table ( error bitemporal.table_error )
+returns table
+    ( error bitemporal.table_error )
 language plpgsql
 stable
 as $body$

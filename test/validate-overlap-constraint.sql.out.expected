@@ -1,0 +1,36 @@
+ namespace | relation | message 
+-----------+----------+---------
+(0 rows)
+
+ namespace |               relation                |                      message                       
+-----------+---------------------------------------+----------------------------------------------------
+ sample    | overlap_constraint_missing_constraint | No overlap constraint matching primary key fields.
+(1 row)
+
+ namespace |                 relation                 |                      message                       
+-----------+------------------------------------------+----------------------------------------------------
+ sample    | overlap_constraint_pk_ex_mismatch_fields | No overlap constraint matching primary key fields.
+(1 row)
+
+ namespace |                  relation                  |                      message                       
+-----------+--------------------------------------------+----------------------------------------------------
+ sample    | overlap_constraint_pk_ex_mismatch_fields_2 | No overlap constraint matching primary key fields.
+(1 row)
+
+ namespace |             relation              |                                  message                                   
+-----------+-----------------------------------+----------------------------------------------------------------------------
+ sample    | overlap_constraint_wrong_operator | Overlap constraint with invalid operator for "id". Expected: =, found: <>.
+(1 row)
+
+ namespace |              relation               |                                        message                                         
+-----------+-------------------------------------+----------------------------------------------------------------------------------------
+ sample    | overlap_constraint_wrong_operator_2 | Overlap constraint with invalid operator for "valid_period". Expected: &&, found: -|-.
+(1 row)
+
+ namespace |              relation               |                                        message                                         
+-----------+-------------------------------------+----------------------------------------------------------------------------------------
+ sample    | overlap_constraint_wrong_operator_3 | Overlap constraint with invalid operator for "id". Expected: =, found: <>.
+ sample    | overlap_constraint_wrong_operator_3 | Overlap constraint with invalid operator for "id2". Expected: =, found: <>.
+ sample    | overlap_constraint_wrong_operator_3 | Overlap constraint with invalid operator for "valid_period". Expected: &&, found: -|-.
+(3 rows)
+

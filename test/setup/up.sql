@@ -489,8 +489,28 @@ create table bitemporal.params
 insert into bitemporal.params(valid_time_name, valid_time_type, system_time_name, system_time_type, system_time_current_time_fn, debug)
 values ('valid_period', 'integer', 'system_period', 'integer', '', false);
 
+create or replace function bitemporal.get_params()
+returns bitemporal.params
+language plpgsql
+stable
+as $body$
+declare
+    p   bitemporal.params;
+begin
+    select *
+      into p
+      from bitemporal.params;
+
+    if not found then
+        raise exception 'empty table bitemporal.params';
+    end if;
+
+    return p;
+end; $body$;
+
 create type bitemporal.table_error
-    as enum ( 'missing-valid-time'
+    as enum ( 'table-not-found'
+            , 'missing-valid-time'
             , 'wrong-valid-time-range-type'
             , 'nullable-valid-time'
             , 'missing-system-time'
@@ -498,11 +518,89 @@ create type bitemporal.table_error
             , 'nullable-system-time'
             , 'missing-primary-key'
             , 'missing-valid-time-on-primary-key'
-            , 'missing-exclude-overlapped-constraint' --TODO
-            , 'missing-exclude-adjacency-constraint' --TODO
-            , 'missing-history-table' --TODO
-            , 'history-table-not-like-main-table' --TODO
-            , 'invalid-table-type' --TODO information_schema.tables.type
-            , 'table-not-found'
-            );
+            , 'missing-exclude-overlapped-constraint' -- TODO
+            , 'missing-primary-key-field-on-exclude-overlapped-constraint' -- TODO
+            , 'wrong-comparison-on-exclude-overlapped-constraint' -- TODO
+            , 'wrong-comparison-on-exclude-overlapped-constraint' -- TODO
+            , 'missing-exclude-adjacency-constraint' -- TODO
+            , 'missing-field-on-exclude-adjacency-constraint' -- TODO
+            , 'wrong-comparison-on-exclude-adjacency-constraint' -- TODO
+            , 'missing-history-table' -- TODO
+            , 'history-table-not-like-main-table' -- TODO
+            , 'invalid-table-type' -- TODO information_schema.tables.type
             -- TODO: foreign key erros?
+            );
+
+create or replace function bitemporal.validate_overlap_constraint
+    ( relid regclass)
+returns table
+    ( namespace name
+    , relation  name
+    , message   text )
+language plpgsql
+stable
+as $body$
+declare
+    p bitemporal.params;
+    r record;
+    has_valid_time boolean default false;
+begin
+    p := bitemporal.get_params();
+
+    select relnamespace::regnamespace
+         , relname
+      into namespace
+         , relation
+      from pg_class
+     where oid = relid;
+
+    select ex.oid is not null as "found_exclude_constraint"
+      into r
+      from pg_constraint pk
+ left join pg_constraint ex on ex.conrelid = pk.conrelid and ex.conkey = pk.conkey and ex.contype = 'x'
+     where pk.conrelid = relid
+       and pk.contype = 'p'
+     group by ex.oid;
+
+    if not r.found_exclude_constraint then
+        message := 'No overlap constraint matching primary key fields.';
+        return next;
+        return;
+    end if;
+
+    for r in with pk as (select conrelid
+                              , conkey
+                              , unnest(conkey) as "attnum"
+                           from pg_constraint
+                          where conrelid = relid
+                            and contype = 'p')
+                , ex as (select unnest(conkey) as "attnum"
+                              , unnest(conexclop) as "conexclop"
+                           from pg_constraint
+                          where conrelid = relid
+                            and contype = 'x'
+                            and conkey in (select conkey from pk))
+                select a.attname
+                     , o.oprname
+                  from pk
+             left join ex on ex.attnum = pk.attnum
+             left join pg_attribute a on not a.attisdropped and a.attrelid = pk.conrelid and a.attnum =  pk.attnum
+             left join pg_operator o on o.oid = ex.conexclop
+                 order by pk.attnum
+    loop
+        if r.attname = p.valid_time_name then
+            has_valid_time := true;
+            if r.oprname <> '&&' then
+                message := format('Overlap constraint with invalid operator for "%s". Expected: &&, found: %s.', r.attname, r.oprname);
+                return next;
+            end if;
+        else
+            if r.oprname <> '=' then
+                message := format('Overlap constraint with invalid operator for "%s". Expected: =, found: %s.', r.attname, r.oprname);
+                return next;
+            end if;
+        end if;
+    end loop;
+
+    return;
+end; $body$;

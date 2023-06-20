@@ -585,9 +585,9 @@ begin
                      , a.attname
                      , o.oprname
                   from pk
-             left join ex on ex.attnum = pk.attnum
-             left join pg_attribute a on not a.attisdropped and a.attrelid = pk.conrelid and a.attnum =  pk.attnum
-             left join pg_operator o on o.oid = ex.conexclop
+                  join ex on ex.attnum = pk.attnum
+                  join pg_attribute a on not a.attisdropped and a.attrelid = pk.conrelid and a.attnum =  pk.attnum
+                  join pg_operator o on o.oid = ex.conexclop
                  order by pk.attnum
     loop
         constraint_name := r.conname;

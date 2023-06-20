@@ -521,7 +521,6 @@ create type bitemporal.table_error
             , 'missing-exclude-overlapped-constraint' -- TODO
             , 'missing-primary-key-field-on-exclude-overlapped-constraint' -- TODO
             , 'wrong-comparison-on-exclude-overlapped-constraint' -- TODO
-            , 'wrong-comparison-on-exclude-overlapped-constraint' -- TODO
             , 'missing-exclude-adjacency-constraint' -- TODO
             , 'missing-field-on-exclude-adjacency-constraint' -- TODO
             , 'wrong-comparison-on-exclude-adjacency-constraint' -- TODO
@@ -534,16 +533,17 @@ create type bitemporal.table_error
 create or replace function bitemporal.validate_overlap_constraint
     ( relid regclass)
 returns table
-    ( namespace name
-    , relation  name
-    , message   text )
+    ( namespace         name
+    , relation          name
+    , constraint_name   name
+    , attribute         name
+    , message           text )
 language plpgsql
 stable
 as $body$
 declare
     p bitemporal.params;
     r record;
-    has_valid_time boolean default false;
 begin
     p := bitemporal.get_params();
 
@@ -574,13 +574,15 @@ begin
                            from pg_constraint
                           where conrelid = relid
                             and contype = 'p')
-                , ex as (select unnest(conkey) as "attnum"
+                , ex as (select conname
+                              , unnest(conkey) as "attnum"
                               , unnest(conexclop) as "conexclop"
                            from pg_constraint
                           where conrelid = relid
                             and contype = 'x'
                             and conkey in (select conkey from pk))
-                select a.attname
+                select ex.conname
+                     , a.attname
                      , o.oprname
                   from pk
              left join ex on ex.attnum = pk.attnum
@@ -588,15 +590,17 @@ begin
              left join pg_operator o on o.oid = ex.conexclop
                  order by pk.attnum
     loop
+        constraint_name := r.conname;
+        attribute := r.attname;
+
         if r.attname = p.valid_time_name then
-            has_valid_time := true;
             if r.oprname <> '&&' then
-                message := format('Overlap constraint with invalid operator for "%s". Expected: &&, found: %s.', r.attname, r.oprname);
+                message := format('Invalid operator. Expected: %s, found: %s.', '&&', r.oprname);
                 return next;
             end if;
         else
             if r.oprname <> '=' then
-                message := format('Overlap constraint with invalid operator for "%s". Expected: =, found: %s.', r.attname, r.oprname);
+                message := format('Invalid operator. Expected: %s, found: %s.', '=', r.oprname);
                 return next;
             end if;
         end if;

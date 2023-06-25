@@ -518,9 +518,6 @@ create type bitemporal.table_error
             , 'nullable-system-time'
             , 'missing-primary-key'
             , 'missing-valid-time-on-primary-key'
-            , 'missing-exclude-overlapped-constraint' -- TODO
-            , 'missing-primary-key-field-on-exclude-overlapped-constraint' -- TODO
-            , 'wrong-comparison-on-exclude-overlapped-constraint' -- TODO
             , 'missing-exclude-adjacency-constraint' -- TODO
             , 'missing-field-on-exclude-adjacency-constraint' -- TODO
             , 'wrong-comparison-on-exclude-adjacency-constraint' -- TODO
@@ -529,6 +526,28 @@ create type bitemporal.table_error
             , 'invalid-table-type' -- TODO information_schema.tables.type
             -- TODO: foreign key erros?
             );
+
+create or replace function bitemporal.sort_array(anyarray)
+returns anyarray
+language sql
+immutable
+as $$
+    select array(select unnest($1) order by 1)
+$$;
+
+create or replace function bitemporal.expected_valid_time_operator(name)
+returns name
+language sql
+stable
+as $$
+    with p as (select valid_time_name
+                 from bitemporal.params)
+    select case $1
+             when valid_time_name then '&&'
+             else '='
+           end
+      from p
+$$;
 
 create or replace function bitemporal.validate_overlap_constraint
     ( relid regclass)
@@ -544,6 +563,9 @@ as $body$
 declare
     p bitemporal.params;
     r record;
+    s record;
+    t record;
+    expected record;
 begin
     p := bitemporal.get_params();
 
@@ -554,57 +576,85 @@ begin
       from pg_class
      where oid = relid;
 
-    select ex.oid is not null as "found_exclude_constraint"
-      into r
-      from pg_constraint pk
- left join pg_constraint ex on ex.conrelid = pk.conrelid and ex.conkey = pk.conkey and ex.contype = 'x'
-     where pk.conrelid = relid
-       and pk.contype = 'p'
-     group by ex.oid;
+    select c.conrelid
+         , c.conkey
+         , array_agg(a.attname) as "attnames"
+         , array_agg(bitemporal.expected_valid_time_operator(a.attname)) as "conexclopnames"
+      into expected
+      from (select x.conrelid
+                 , x.conkey
+                 , unnest(x.conkey) as "attnum"
+              from (select conrelid
+                         , bitemporal.sort_array(conkey) as "conkey"
+                      from pg_constraint
+                     where conrelid = relid
+                       and contype = 'p') x
+             order by attnum asc) c
+      join pg_attribute a on a.attrelid = c.conrelid and a.attnum = c.attnum
+     group by c.conrelid, c.conkey;
 
-    if not r.found_exclude_constraint then
-        message := 'No overlap constraint matching primary key fields.';
+    select oid
+      into s
+      from pg_constraint
+     where conrelid = expected.conrelid
+       and contype = 'x'
+       and bitemporal.sort_array(conkey) = expected.conkey;
+
+    if not found then
+        message := format('No overlap constraint matching primary key fields. Expected a exclude constraint on fields %s with operators %s', expected.attnames, expected.conexclopnames);
         return next;
         return;
     end if;
 
-    for r in with pk as (select conrelid
-                              , conkey
-                              , unnest(conkey) as "attnum"
-                           from pg_constraint
-                          where conrelid = relid
-                            and contype = 'p')
-                , ex as (select conname
-                              , unnest(conkey) as "attnum"
-                              , unnest(conexclop) as "conexclop"
-                           from pg_constraint
-                          where conrelid = relid
-                            and contype = 'x'
-                            and conkey in (select conkey from pk))
-                select ex.conname
-                     , a.attname
-                     , o.oprname
-                  from pk
-                  join ex on ex.attnum = pk.attnum
-                  join pg_attribute a on not a.attisdropped and a.attrelid = pk.conrelid and a.attnum =  pk.attnum
-                  join pg_operator o on o.oid = ex.conexclop
-                 order by pk.attnum
-    loop
-        constraint_name := r.conname;
-        attribute := r.attname;
+    select y.attnames = expected.attnames and y.conexclopnames = expected.conexclopnames as "is_valid_overlap_constraint"
+         , y.conname
+         , y.attnames
+         , y.conexclopnames
+      into r
+      from (select c.conname
+                 , array_agg(c.attname) as "attnames"
+                 , array_agg(c.oprname) as "conexclopnames"
+              from (select x.oid
+                         , x.conrelid
+                         , x.conname
+                         , array_agg(x.attnum) over (partition by x.oid) as "conkey"
+                         , array_agg(x.opoid) over (partition by x.oid) as "conexclop"
+                         , x.attnum
+                         , a.attname
+                         , x.opoid
+                         , o.oprname
+                      from (select oid
+                                 , conrelid
+                                 , conname
+                                 , unnest(conkey) as "attnum"
+                                 , unnest(conexclop) as "opoid"
+                              from pg_constraint
+                             where conrelid = relid
+                               and contype = 'x'
+                             order by oid asc, attnum asc) x
+                      join pg_attribute a on a.attrelid = x.conrelid and a.attnum = x.attnum
+                      join pg_operator o on o.oid = x.opoid) c
+             where c.conkey = expected.conkey
+             group by c.conname) y
+     order by 1 desc -- make valid constraints appear first
+     limit 1; -- we need only one overlap constraint
 
-        if r.attname = p.valid_time_name then
-            if r.oprname <> '&&' then
-                message := format('Invalid operator. Expected: %s, found: %s.', '&&', r.oprname);
-                return next;
-            end if;
-        else
-            if r.oprname <> '=' then
-                message := format('Invalid operator. Expected: %s, found: %s.', '=', r.oprname);
-                return next;
-            end if;
-        end if;
-    end loop;
+     if r.is_valid_overlap_constraint then
+         return;
+     end if;
+
+     for t in select r.conname
+                   , unnest(r.attnames) as "attname"
+                   , unnest(r.conexclopnames) as "conexclopname"
+                   , unnest(expected.conexclopnames) as "expected_conexclopname"
+     loop
+         if t.conexclopname <> t.expected_conexclopname then
+             constraint_name := t.conname;
+             attribute := t.attname;
+             message := format('Invalid operator. Expected: %s, found: %s.', t.expected_conexclopname, t.conexclopname);
+             return next;
+         end if;
+     end loop;
 
     return;
 end; $body$;

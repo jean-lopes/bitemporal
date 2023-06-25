@@ -2,19 +2,19 @@
 -----------+----------+-----------------+-----------+---------
 (0 rows)
 
- namespace |               relation                | constraint_name | attribute |                      message                       
------------+---------------------------------------+-----------------+-----------+----------------------------------------------------
- sample    | overlap_constraint_missing_constraint |                 |           | No overlap constraint matching primary key fields.
+ namespace |               relation                | constraint_name | attribute |                                                                 message                                                                  
+-----------+---------------------------------------+-----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------
+ sample    | overlap_constraint_missing_constraint |                 |           | No overlap constraint matching primary key fields. Expected a exclude constraint on fields {id,id2,valid_period} with operators {=,=,&&}
 (1 row)
 
- namespace |                 relation                 | constraint_name | attribute |                      message                       
------------+------------------------------------------+-----------------+-----------+----------------------------------------------------
- sample    | overlap_constraint_pk_ex_mismatch_fields |                 |           | No overlap constraint matching primary key fields.
+ namespace |                 relation                 | constraint_name | attribute |                                                                 message                                                                  
+-----------+------------------------------------------+-----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------
+ sample    | overlap_constraint_pk_ex_mismatch_fields |                 |           | No overlap constraint matching primary key fields. Expected a exclude constraint on fields {id,id2,valid_period} with operators {=,=,&&}
 (1 row)
 
- namespace |                  relation                  | constraint_name | attribute |                      message                       
------------+--------------------------------------------+-----------------+-----------+----------------------------------------------------
- sample    | overlap_constraint_pk_ex_mismatch_fields_2 |                 |           | No overlap constraint matching primary key fields.
+ namespace |                  relation                  | constraint_name | attribute |                                                                 message                                                                  
+-----------+--------------------------------------------+-----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------
+ sample    | overlap_constraint_pk_ex_mismatch_fields_2 |                 |           | No overlap constraint matching primary key fields. Expected a exclude constraint on fields {id,id2,valid_period} with operators {=,=,&&}
 (1 row)
 
  namespace |             relation              |                      constraint_name                       | attribute |                  message                  
@@ -29,8 +29,17 @@
 
  namespace |              relation               |                       constraint_name                        |  attribute   |                   message                   
 -----------+-------------------------------------+--------------------------------------------------------------+--------------+---------------------------------------------
- sample    | overlap_constraint_wrong_operator_3 | overlap_constraint_wrong_operator_3_id_id2_valid_period_excl | id           | Invalid operator. Expected: =, found: <>.
- sample    | overlap_constraint_wrong_operator_3 | overlap_constraint_wrong_operator_3_id_id2_valid_period_excl | id2          | Invalid operator. Expected: =, found: <>.
- sample    | overlap_constraint_wrong_operator_3 | overlap_constraint_wrong_operator_3_id_id2_valid_period_excl | valid_period | Invalid operator. Expected: &&, found: -|-.
+ sample    | overlap_constraint_wrong_operator_3 | overlap_constraint_wrong_operator_3_valid_period_id2_id_excl | id           | Invalid operator. Expected: =, found: <>.
+ sample    | overlap_constraint_wrong_operator_3 | overlap_constraint_wrong_operator_3_valid_period_id2_id_excl | id2          | Invalid operator. Expected: =, found: <>.
+ sample    | overlap_constraint_wrong_operator_3 | overlap_constraint_wrong_operator_3_valid_period_id2_id_excl | valid_period | Invalid operator. Expected: &&, found: -|-.
 (3 rows)
+
+ namespace | relation | constraint_name | attribute | message 
+-----------+----------+-----------------+-----------+---------
+(0 rows)
+
+ namespace |                   relation                   |                         constraint_name                         |  attribute   |                   message                   
+-----------+----------------------------------------------+-----------------------------------------------------------------+--------------+---------------------------------------------
+ sample    | overlap_constraint_multiple_with_pk_fields_2 | overlap_constraint_multiple_with_pk_f_id_id2_valid_period_excl2 | valid_period | Invalid operator. Expected: &&, found: -|-.
+(1 row)
 

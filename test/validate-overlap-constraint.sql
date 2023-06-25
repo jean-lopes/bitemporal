@@ -8,6 +8,8 @@ drop table if exists sample.overlap_constraint_pk_ex_mismatch_fields_2;
 drop table if exists sample.overlap_constraint_wrong_operator;
 drop table if exists sample.overlap_constraint_wrong_operator_2;
 drop table if exists sample.overlap_constraint_wrong_operator_3;
+drop table if exists sample.overlap_constraint_multiple_with_pk_fields;
+drop table if exists sample.overlap_constraint_multiple_with_pk_fields_2;
 
 \echo 'bitemporal.validate_overlap_constraint - [ok]'
 create table sample.overlap_constraint_ok
@@ -101,7 +103,37 @@ create table sample.overlap_constraint_wrong_operator_3
     , valid_period      int4range not null
     , system_period     int4range not null
     , primary key(id, id2, valid_period)
-    , exclude using gist (id with <>, id2 with <>, valid_period with -|-)
+    , exclude using gist (valid_period with -|-, id2 with <>, id with <>)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
 select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_wrong_operator_3');
+
+\echo 'bitemporal.validate_overlap_constraint - [multiple constraints with primary key fields, one ok]'
+create table sample.overlap_constraint_multiple_with_pk_fields
+    ( id                int not null
+    , id2               int not null
+    , value             int not null
+    , value2            int not null
+    , valid_period      int4range not null
+    , system_period     int4range not null
+    , primary key(id, id2, valid_period)
+    , exclude using gist (id with =, id2 with =, valid_period with -|-)
+    , exclude using gist (id with =, id2 with =, valid_period with &&)
+    , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
+
+select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_multiple_with_pk_fields');
+
+\echo 'bitemporal.validate_overlap_constraint - [multiple constraints with primary key fields, none ok]'
+create table sample.overlap_constraint_multiple_with_pk_fields_2
+    ( id                int not null
+    , id2               int not null
+    , value             int not null
+    , value2            int not null
+    , valid_period      int4range not null
+    , system_period     int4range not null
+    , primary key(id, id2, valid_period)
+    , exclude using gist (id with =, id2 with =, valid_period with -|-)
+    , exclude using gist (valid_period with -|-, id with =, id2 with =)
+    , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
+
+select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_multiple_with_pk_fields_2');

@@ -554,8 +554,6 @@ create or replace function bitemporal.validate_overlap_constraint
 returns table
     ( namespace         name
     , relation          name
-    , constraint_name   name
-    , attribute         name
     , message           text )
 language plpgsql
 stable
@@ -564,7 +562,6 @@ declare
     p bitemporal.params;
     r record;
     s record;
-    t record;
     expected record;
 begin
     p := bitemporal.get_params();
@@ -601,15 +598,12 @@ begin
        and bitemporal.sort_array(conkey) = expected.conkey;
 
     if not found then
-        message := format('No overlap constraint matching primary key fields. Expected a exclude constraint on fields %s with operators %s', expected.attnames, expected.conexclopnames);
+        message := format('Missing constraint. Expected a exclude constraint on %s with operators %s', expected.attnames, expected.conexclopnames);
         return next;
         return;
     end if;
 
-    select y.attnames = expected.attnames and y.conexclopnames = expected.conexclopnames as "is_valid_overlap_constraint"
-         , y.conname
-         , y.attnames
-         , y.conexclopnames
+    select y.conname
       into r
       from (select c.conname
                  , array_agg(c.attname) as "attnames"
@@ -636,25 +630,13 @@ begin
                       join pg_operator o on o.oid = x.opoid) c
              where c.conkey = expected.conkey
              group by c.conname) y
-     order by 1 desc -- make valid constraints appear first
-     limit 1; -- we need only one overlap constraint
+     where y.attnames = expected.attnames
+       and y.conexclopnames = expected.conexclopnames;
 
-     if r.is_valid_overlap_constraint then
-         return;
-     end if;
-
-     for t in select r.conname
-                   , unnest(r.attnames) as "attname"
-                   , unnest(r.conexclopnames) as "conexclopname"
-                   , unnest(expected.conexclopnames) as "expected_conexclopname"
-     loop
-         if t.conexclopname <> t.expected_conexclopname then
-             constraint_name := t.conname;
-             attribute := t.attname;
-             message := format('Invalid operator. Expected: %s, found: %s.', t.expected_conexclopname, t.conexclopname);
-             return next;
-         end if;
-     end loop;
+    if not found then
+        message := format('Missing constraint. Expected a exclude constraint on %s with operators %s', expected.attnames, expected.conexclopnames);
+        return next;
+    end if;
 
     return;
 end; $body$;

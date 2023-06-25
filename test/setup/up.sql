@@ -559,13 +559,10 @@ language plpgsql
 stable
 as $body$
 declare
-    p bitemporal.params;
     r record;
     s record;
     expected record;
 begin
-    p := bitemporal.get_params();
-
     select relnamespace::regnamespace
          , relname
       into namespace

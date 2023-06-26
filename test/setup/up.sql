@@ -535,7 +535,7 @@ as $$
     select array(select unnest($1) order by 1)
 $$;
 
-create or replace function bitemporal.expected_valid_time_operator(name)
+create or replace function bitemporal.overlap_operator_for(name)
 returns name
 language sql
 stable
@@ -549,8 +549,22 @@ as $$
       from p
 $$;
 
+create or replace function bitemporal.adjacency_operator_for(name)
+returns name
+language sql
+stable
+as $$
+    with p as (select valid_time_name
+                 from bitemporal.params)
+    select case $1
+             when valid_time_name then '-|-'
+             else '='
+           end
+      from p
+$$;
+
 create or replace function bitemporal.validate_overlap_constraint
-    ( relid regclass)
+    ( relid regclass )
 returns table
     ( namespace         name
     , relation          name
@@ -573,7 +587,7 @@ begin
     select c.conrelid
          , c.conkey
          , array_agg(a.attname) as "attnames"
-         , array_agg(bitemporal.expected_valid_time_operator(a.attname)) as "conexclopnames"
+         , array_agg(bitemporal.overlap_operator_for(a.attname)) as "conexclopnames"
       into expected
       from (select x.conrelid
                  , x.conkey

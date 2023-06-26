@@ -25,6 +25,9 @@ test: reset
 	$(PSQL_CMD) --file test/validate-overlap-constraint.sql --output test/validate-overlap-constraint.sql.out
 	diff --ignore-trailing-space --ignore-blank-lines test/validate-overlap-constraint.sql.out test/validate-overlap-constraint.sql.out.expected
 
+	$(PSQL_CMD) --file test/validate-adjacency-constraint.sql --output test/validate-adjacency-constraint.sql.out
+	diff --ignore-trailing-space --ignore-blank-lines test/validate-adjacency-constraint.sql.out test/validate-adjacency-constraint.sql.out.expected
+
 enable-debug:
 	$(PSQL_CMD) --file dev/enable-debug.sql
 

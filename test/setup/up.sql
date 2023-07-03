@@ -518,11 +518,6 @@ create type bitemporal.table_error
             , 'nullable-system-time'
             , 'missing-primary-key'
             , 'missing-valid-time-on-primary-key'
-            , 'missing-exclude-adjacency-constraint' -- TODO
-            , 'missing-field-on-exclude-adjacency-constraint' -- TODO
-            , 'wrong-comparison-on-exclude-adjacency-constraint' -- TODO
-            , 'missing-history-table' -- TODO
-            , 'history-table-not-like-main-table' -- TODO
             , 'invalid-table-type' -- TODO information_schema.tables.type
             -- TODO: foreign key erros?
             );
@@ -706,3 +701,67 @@ begin
 
     return;
 end; $body$;
+
+create or replace function bitemporal.history_relation_errors
+    ( namespace         regnamespace
+    , history_namespace regnamespace )
+returns table
+    ( namespace name
+    , relation  name
+    , message   text )
+language sql
+immutable
+as $$
+    with main as (select r.relnamespace
+                       , r.relname
+                       , a.attnum
+                       , a.attname
+                       , a.atttypid
+                    from pg_catalog.pg_class as "r"
+                    join pg_catalog.pg_attribute "a" on a.attrelid = r.oid
+                   where r.relnamespace = namespace
+                     and r.relkind = 'r'
+                     and a.attnum > 0
+                     and not a.attisdropped
+                   order by r.relname, a.attnum)
+       , hist_rel as (select r.relname
+                        from pg_catalog.pg_class r
+                       where r.relnamespace = history_namespace
+                         and r.relkind = 'r'
+                       order by r.relname)
+       , hist_att as (select r.relname
+                           , a.attnum
+                           , a.attname
+                           , a.atttypid
+                        from pg_catalog.pg_class r
+                        join pg_catalog.pg_attribute a on a.attrelid = r.oid
+                       where r.relnamespace = history_namespace
+                         and r.relkind = 'r'
+                         and a.attnum > 0
+                         and not a.attisdropped
+                       order by r.relname, a.attnum)
+    select history_namespace as "namespace"
+         , x.mrelname as "relation"
+         , case
+             when x.is_missing_relation then 'Missing relation.'
+             when x.is_missing_attribute then format('Missing attribute %s.', x.mattname)
+             when x.is_type_mismatch then format('Attribute %s: Expected type %s, found %s.', x.mattname, x.matttypid, x.hatttypid)
+             else 'Unknown'
+           end as "message"
+    from (select m.relname as "mrelname"
+               , m.attname as "mattname"
+               , m.atttypid::regtype as "matttypid"
+               , h.relname as "hrelname"
+               , ha.attname as "hattname"
+               , ha.atttypid::regtype as "hatttypid"
+               , h.relname is null "is_missing_relation"
+               , ha.attname is null "is_missing_attribute"
+               , ha.atttypid is null or m.atttypid <> ha.atttypid "is_type_mismatch"
+            from main as "m"
+       left join hist_rel as "h" using (relname)
+       left join hist_att as "ha" using (relname, attname)
+           order by m.relname, m.attnum) x
+           where is_missing_relation
+              or is_missing_attribute
+              or is_type_mismatch;
+$$;

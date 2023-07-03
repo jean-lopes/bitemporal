@@ -1,0 +1,20 @@
+ namespace | relation | message 
+-----------+----------+---------
+(0 rows)
+
+         namespace          | relation |      message      
+----------------------------+----------+-------------------
+ hre_missing_relations_hist | rel2     | Missing relation.
+ hre_missing_relations_hist | rel3     | Missing relation.
+(2 rows)
+
+         namespace          | relation |        message        
+----------------------------+----------+-----------------------
+ hre_missing_attribute_hist | rel      | Missing attribute id.
+(1 row)
+
+           namespace           | relation |                     message                      
+-------------------------------+----------+--------------------------------------------------
+ hre_wrong_attribute_type_hist | rel      | Attribute id: Expected type integer, found text.
+(1 row)
+

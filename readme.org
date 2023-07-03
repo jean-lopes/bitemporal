@@ -12,9 +12,6 @@
 
 *** TODO code generator
 **** TODO bitemporal.diagnostics
-***** TODO list bitemporal tables
-***** TODO list ignored tables with reason
-***** TODO list bitemporal tables missing exclude constraints
 **** TODO bitemporal.ignore_tables(regclass): exclude this tables from code generation
 **** TODO system-time procedures
 **** TODO system-time triggers
@@ -25,12 +22,15 @@
 only works for base-tables (no views, or temporary tables).
 does not support range domain types.
 
-** Future Ideas
+** Future Ideas/Research needed
 *** TODO privileges?
 How should privileges be handled by the generator and/or generated code?
 
 *** TODO support range domain types
-
+*** TODO custom range types?
+*** TODO partitioned tables
+*** TODO improve history relations comparison
+There is a lot of room for improvement on checking for differences between the main and history relations.
 
 ** Points of Interest (POI)
 

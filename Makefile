@@ -28,6 +28,9 @@ test: reset
 	$(PSQL_CMD) --file test/validate-adjacency-constraint.sql --output test/validate-adjacency-constraint.sql.out
 	diff --ignore-trailing-space --ignore-blank-lines test/validate-adjacency-constraint.sql.out test/validate-adjacency-constraint.sql.out.expected
 
+	$(PSQL_CMD) --file test/history-relation-errors.sql --output test/history-relation-errors.sql.out
+	diff --ignore-trailing-space --ignore-blank-lines test/history-relation-errors.sql.out test/history-relation-errors.sql.out.expected
+
 enable-debug:
 	$(PSQL_CMD) --file dev/enable-debug.sql
 

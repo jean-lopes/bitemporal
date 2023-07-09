@@ -37,6 +37,9 @@ test: reset
 	$(PSQL_CMD) --no-psqlrc --file test/valid-time-errors.sql --output test/valid-time-errors.sql.out
 	diff --ignore-trailing-space --ignore-blank-lines test/valid-time-errors.sql.out test/valid-time-errors.sql.out.expected
 
+	$(PSQL_CMD) --no-psqlrc --file test/system-time-errors.sql --output test/system-time-errors.sql.out
+	diff --ignore-trailing-space --ignore-blank-lines test/system-time-errors.sql.out test/system-time-errors.sql.out.expected
+
 enable-debug:
 	$(PSQL_CMD) --file dev/enable-debug.sql
 

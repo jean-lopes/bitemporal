@@ -21,10 +21,10 @@ select * from bitemporal.valid_time_errors('vt.nullable');
 
 \echo 'bitemporal.valid_time_errors - [invalid type]'
 \pset title 'vt.invalid_type'
-create table vt.invalid_type( valid_period int not null);
+create table vt.invalid_type( valid_period int not null );
 select * from bitemporal.valid_time_errors('vt.invalid_type');
 
 \echo 'bitemporal.valid_time_errors - [nullable invalid type]'
 \pset title 'vt.nullable_invalid_type'
-create table vt.nullable_invalid_type( valid_period int);
+create table vt.nullable_invalid_type( valid_period int );
 select * from bitemporal.valid_time_errors('vt.nullable_invalid_type');

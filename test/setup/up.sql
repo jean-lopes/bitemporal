@@ -510,12 +510,6 @@ end; $body$;
 
 create type bitemporal.table_error
     as enum ( 'table-not-found'
-            , 'missing-valid-time'
-            , 'wrong-valid-time-range-type'
-            , 'nullable-valid-time'
-            , 'missing-system-time'
-            , 'wrong-system-time-range-type'
-            , 'nullable-system-time'
             , 'invalid-table-type' -- TODO information_schema.tables.type
             -- TODO: foreign key erros?
             );
@@ -867,6 +861,62 @@ begin
     if r.atttypname <> p.valid_time_range then
        message := 'Invalid type.';
        expected := p.valid_time_range::text;
+       was := r.atttypname;
+       return next;
+    end if;
+
+    return;
+end $body$;
+
+create or replace function bitemporal.system_time_errors
+    ( relid regclass )
+returns table
+    ( namespace name
+    , relation  name
+    , attribute text
+    , message   text
+    , expected  text
+    , was       text )
+language plpgsql
+stable
+as $body$
+declare
+  p bitemporal.params;
+  r record;
+begin
+    p := bitemporal.get_params();
+
+    attribute := p.system_time_name;
+
+    select relnamespace::regnamespace::text
+         , relname
+      into namespace
+         , relation
+      from pg_class
+     where oid = relid;
+
+    select atttypid::regtype as "atttypname"
+         , attnotnull
+      into r
+      from pg_attribute
+     where attrelid = relid
+       and attname = p.system_time_name
+       and not attisdropped;
+
+    if not found then
+       message := 'Missing attribute.';
+       return next;
+       return;
+    end if;
+
+    if not r.attnotnull then
+       message := 'Nullable attribute.';
+       return next;
+    end if;
+
+    if r.atttypname <> p.system_time_range then
+       message := 'Invalid type.';
+       expected := p.system_time_range::text;
        was := r.atttypname;
        return next;
     end if;

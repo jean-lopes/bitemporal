@@ -445,7 +445,7 @@ create type bitemporal.range_type
 
 create or replace function bitemporal.get_range_type
     ( range_type bitemporal.range_type )
-    returns text
+    returns regtype
     language sql
     immutable
     returns null on null input
@@ -456,11 +456,11 @@ create or replace function bitemporal.get_range_type
                when 'timestamp'    then 'tsrange'
                when 'timestamptz'  then 'tstzrange'
                when 'date'         then 'daterange'
-           end;
+           end::regtype;
 
 create or replace function bitemporal.get_multirange_type
     ( range_type bitemporal.range_type )
-    returns text
+    returns regtype
     language sql
     immutable
     returns null on null input
@@ -471,18 +471,18 @@ create or replace function bitemporal.get_multirange_type
                 when 'timestamp'    then 'tsmultirange'
                 when 'timestamptz'  then 'tstzmultirange'
                 when 'date'         then 'datemultirange'
-              end;
+              end::regtype;
 
 create table bitemporal.params
     ( id                            boolean generated always as (true) stored unique --make this table accept only one row :)
     , valid_time_name               name
     , valid_time_type               bitemporal.range_type not null
-    , valid_time_range              text not null generated always as (bitemporal.get_range_type(valid_time_type)) stored
-    , valid_time_multirange         text not null generated always as (bitemporal.get_multirange_type(valid_time_type)) stored
+    , valid_time_range              regtype not null generated always as (bitemporal.get_range_type(valid_time_type)) stored
+    , valid_time_multirange         regtype not null generated always as (bitemporal.get_multirange_type(valid_time_type)) stored
     , system_time_name              name
     , system_time_type              bitemporal.range_type not null
-    , system_time_range             text not null generated always as (bitemporal.get_range_type(system_time_type)) stored
-    , system_time_multirange        text not null generated always as (bitemporal.get_multirange_type(system_time_type)) stored
+    , system_time_range             regtype not null generated always as (bitemporal.get_range_type(system_time_type)) stored
+    , system_time_multirange        regtype not null generated always as (bitemporal.get_multirange_type(system_time_type)) stored
     , system_time_current_time_fn   text not null
     , debug                         boolean not null );
 
@@ -776,7 +776,6 @@ as $body$
 declare
   p bitemporal.params;
   r record;
-  has_primary_key boolean default false;
 begin
     p := bitemporal.get_params();
 
@@ -814,6 +813,62 @@ begin
     if not found then
         message := format('primary key missing attribute "%s".', p.valid_time_name);
         return next;
+    end if;
+
+    return;
+end $body$;
+
+create or replace function bitemporal.valid_time_errors
+    ( relid regclass )
+returns table
+    ( namespace name
+    , relation  name
+    , attribute text
+    , message   text
+    , expected  text
+    , was       text )
+language plpgsql
+stable
+as $body$
+declare
+  p bitemporal.params;
+  r record;
+begin
+    p := bitemporal.get_params();
+
+    attribute := p.valid_time_name;
+
+    select relnamespace::regnamespace::text
+         , relname
+      into namespace
+         , relation
+      from pg_class
+     where oid = relid;
+
+    select atttypid::regtype as "atttypname"
+         , attnotnull
+      into r
+      from pg_attribute
+     where attrelid = relid
+       and attname = p.valid_time_name
+       and not attisdropped;
+
+    if not found then
+       message := 'Missing attribute.';
+       return next;
+       return;
+    end if;
+
+    if not r.attnotnull then
+       message := 'Nullable attribute.';
+       return next;
+    end if;
+
+    if r.atttypname <> p.valid_time_range then
+       message := 'Invalid type.';
+       expected := p.valid_time_range::text;
+       was := r.atttypname;
+       return next;
     end if;
 
     return;

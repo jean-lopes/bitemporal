@@ -1,0 +1,25 @@
+                            vt.ok
+ namespace | relation | attribute | message | expected | was 
+-----------+----------+-----------+---------+----------+-----
+
+                                vt.missing
+ namespace | relation |  attribute   |      message       | expected | was 
+-----------+----------+--------------+--------------------+----------+-----
+ vt        | missing  | valid_period | Missing attribute. |          | 
+
+                                vt.nullable
+ namespace | relation |  attribute   |       message       | expected | was 
+-----------+----------+--------------+---------------------+----------+-----
+ vt        | nullable | valid_period | Nullable attribute. |          | 
+
+                                vt.invalid_type
+ namespace |   relation   |  attribute   |    message    | expected  |   was   
+-----------+--------------+--------------+---------------+-----------+---------
+ vt        | invalid_type | valid_period | Invalid type. | int4range | integer
+
+                                   vt.nullable_invalid_type
+ namespace |       relation        |  attribute   |       message       | expected  |   was   
+-----------+-----------------------+--------------+---------------------+-----------+---------
+ vt        | nullable_invalid_type | valid_period | Nullable attribute. |           | 
+ vt        | nullable_invalid_type | valid_period | Invalid type.       | int4range | integer
+

@@ -1,4 +1,5 @@
 \set QUIET 'on'
+drop schema if exists pk cascade;
 drop schema if exists hre_ok cascade;
 drop schema if exists hre_ok_hist cascade;
 drop schema if exists hre_missing_relations cascade;

@@ -516,8 +516,6 @@ create type bitemporal.table_error
             , 'missing-system-time'
             , 'wrong-system-time-range-type'
             , 'nullable-system-time'
-            , 'missing-primary-key'
-            , 'missing-valid-time-on-primary-key'
             , 'invalid-table-type' -- TODO information_schema.tables.type
             -- TODO: foreign key erros?
             );
@@ -765,3 +763,58 @@ as $$
               or is_missing_attribute
               or is_type_mismatch;
 $$;
+
+create or replace function bitemporal.primary_key_errors
+    ( relid regclass )
+returns table
+    ( namespace name
+    , relation  name
+    , message   text )
+language plpgsql
+stable
+as $body$
+declare
+  p bitemporal.params;
+  r record;
+  has_primary_key boolean default false;
+begin
+    p := bitemporal.get_params();
+
+    select relnamespace::regnamespace::text
+         , relname
+      into namespace
+         , relation
+      from pg_class
+     where oid = relid;
+
+    select *
+      into r
+      from pg_constraint
+     where contype = 'p'
+       and conrelid = relid;
+
+    if not found then
+        message := 'missing primary key.';
+        return next;
+        return;
+    end if;
+
+    with c as (select conrelid
+                    , unnest(conkey) as "attnum"
+                 from pg_constraint
+                where contype = 'p'
+                  and conrelid = relid
+                order by attnum)
+    select *
+      into r
+      from c
+      join pg_attribute as "a" on a.attrelid = c.conrelid and a.attnum = c.attnum
+     where a.attname = p.valid_time_name;
+
+    if not found then
+        message := format('primary key missing attribute "%s".', p.valid_time_name);
+        return next;
+    end if;
+
+    return;
+end $body$;

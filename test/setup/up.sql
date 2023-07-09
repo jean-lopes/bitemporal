@@ -435,6 +435,18 @@ create trigger s_system_time_before
     for each row
     execute function sample_history.set_system_period_s();
 
+create or replace function bitemporal.identity(text)
+returns text
+language sql
+immutable
+as $$ select $1 $$;
+
+create or replace function bitemporal.append_history(text)
+returns text
+language sql
+immutable
+as $$ select $1||'_history' $$;
+
 create type bitemporal.range_type
     as enum ( 'integer'
             , 'bigint'
@@ -484,6 +496,8 @@ create table bitemporal.params
     , system_time_range             regtype not null generated always as (bitemporal.get_range_type(system_time_type)) stored
     , system_time_multirange        regtype not null generated always as (bitemporal.get_multirange_type(system_time_type)) stored
     , system_time_current_time_fn   text not null
+    , history_namespace_name_fn     regproc not null default 'bitemporal.append_history'
+    , history_relation_name_fn      regproc not null default 'bitemporal.identity'
     , debug                         boolean not null );
 
 insert into bitemporal.params(valid_time_name, valid_time_type, system_time_name, system_time_type, system_time_current_time_fn, debug)
@@ -507,6 +521,37 @@ begin
 
     return p;
 end; $body$;
+
+create or replace function bitemporal.history_relation_name
+    ( relid regclass )
+returns regclass
+language plpgsql
+immutable
+as $body$
+declare
+    p        bitemporal.params;
+    ns       text;
+    rel      text;
+    hist_ns  text;
+    hist_rel text;
+begin
+    p := bitemporal.get_params();
+
+    ns := split_part(relid::text, '.', 1);
+    rel := split_part(relid::text, '.', 2);
+
+    execute format( 'select %s(%s)::text'
+                  , p.history_namespace_name_fn
+                  , quote_literal(ns) )
+       into hist_ns;
+
+    execute format( 'select %s(%s)::text'
+                  , p.history_relation_name_fn
+                  , quote_literal(rel) )
+       into hist_rel;
+
+    return format('%s.%s', hist_ns, hist_rel)::regclass;
+end $body$;
 
 create type bitemporal.table_error
     as enum ( 'table-not-found'

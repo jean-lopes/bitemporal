@@ -1,40 +1,30 @@
 \set QUIET 'on'
+\pset footer off
 
-drop schema if exists hre_ok cascade;
-drop schema if exists hre_ok_hist cascade;
-drop schema if exists hre_missing_relations cascade;
-drop schema if exists hre_missing_relations_hist cascade;
-drop schema if exists hre_missing_attribute cascade;
-drop schema if exists hre_missing_attribute_hist cascade;
-drop schema if exists hre_wrong_attribute_type cascade;
-drop schema if exists hre_wrong_attribute_type_hist cascade;
-create schema hre_ok;
-create schema hre_ok_hist;
-create schema hre_missing_relations;
-create schema hre_missing_relations_hist;
-create schema hre_missing_attribute;
-create schema hre_missing_attribute_hist;
-create schema hre_wrong_attribute_type;
-create schema hre_wrong_attribute_type_hist;
+drop schema if exists h cascade;
+drop schema if exists h_history cascade;
+create schema h;
+create schema h_history;
 
 \echo 'bitemporal.history_relation_errors - [ok]'
-create table hre_ok.rel( id int not null );
-create table hre_ok_hist.rel( like hre_ok.rel );
-select * from bitemporal.history_relation_errors('hre_ok', 'hre_ok_hist');
+\pset title 'h.ok'
+create table h.ok( id int not null );
+create table h_history.ok( like h.ok );
+select * from bitemporal.history_relation_errors('h.ok');
 
-\echo 'bitemporal.history_relation_errors - [missing tables]'
-create table hre_missing_relations.rel1( id int not null );
-create table hre_missing_relations.rel2( id int not null );
-create table hre_missing_relations.rel3( id int not null );
-create table hre_missing_relations_hist.rel1( like hre_missing_relations.rel1 );
-select * from bitemporal.history_relation_errors('hre_missing_relations', 'hre_missing_relations_hist');
+\echo 'bitemporal.history_relation_errors - [missing relation]'
+\pset title 'h.missing_relation'
+create table h.missing_relation( id int not null );
+select * from bitemporal.history_relation_errors('h.missing_relation');
 
 \echo 'bitemporal.history_relation_errors - [missing attribute]'
-create table hre_missing_attribute.rel( id int not null );
-create table hre_missing_attribute_hist.rel( idd int not null );
-select * from bitemporal.history_relation_errors('hre_missing_attribute', 'hre_missing_attribute_hist');
+\pset title 'h.missing_attribute'
+create table h.missing_attribute( id int not null );
+create table h_history.missing_attribute( idd int not null );
+select * from bitemporal.history_relation_errors('h.missing_attribute');
 
 \echo 'bitemporal.history_relation_errors - [wrong attribute type]'
-create table hre_wrong_attribute_type.rel( id int not null );
-create table hre_wrong_attribute_type_hist.rel( id text not null );
-select * from bitemporal.history_relation_errors('hre_wrong_attribute_type', 'hre_wrong_attribute_type_hist');
+\pset title 'h.wrong_attribute_type'
+create table h.wrong_attribute_type( id int not null, value int );
+create table h_history.wrong_attribute_type( id text not null, value text );
+select * from bitemporal.history_relation_errors('h.wrong_attribute_type');

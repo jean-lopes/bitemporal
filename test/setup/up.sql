@@ -522,9 +522,10 @@ begin
     return p;
 end; $body$;
 
+-- comment: return regclass or null
 create or replace function bitemporal.history_relation_name
     ( relid regclass )
-returns regclass
+returns name
 language plpgsql
 immutable
 as $body$
@@ -550,7 +551,18 @@ begin
                   , quote_literal(rel) )
        into hist_rel;
 
-    return format('%s.%s', hist_ns, hist_rel)::regclass;
+    return format('%s.%s', hist_ns, hist_rel);
+end $body$;
+
+-- comment: return regclass or null
+create or replace function bitemporal.history_relation_id
+    ( relid regclass )
+returns regclass
+language plpgsql
+immutable
+as $body$
+begin
+    return to_regclass(bitemporal.history_relation_name(relid));
 end $body$;
 
 create type bitemporal.table_error
@@ -740,68 +752,69 @@ begin
 end; $body$;
 
 create or replace function bitemporal.history_relation_errors
-    ( namespace         regnamespace
-    , history_namespace regnamespace )
+    ( relid regclass )
 returns table
     ( namespace name
     , relation  name
-    , message   text )
-language sql
+    , attribute name
+    , message   text
+    , expected  text
+    , was       text )
+language plpgsql
 immutable
-as $$
-    with main as (select r.relnamespace
-                       , r.relname
-                       , a.attnum
-                       , a.attname
-                       , a.atttypid
-                    from pg_catalog.pg_class as "r"
-                    join pg_catalog.pg_attribute "a" on a.attrelid = r.oid
-                   where r.relnamespace = namespace
-                     and r.relkind = 'r'
-                     and a.attnum > 0
-                     and not a.attisdropped
-                   order by r.relname, a.attnum)
-       , hist_rel as (select r.relname
-                        from pg_catalog.pg_class r
-                       where r.relnamespace = history_namespace
-                         and r.relkind = 'r'
-                       order by r.relname)
-       , hist_att as (select r.relname
-                           , a.attnum
-                           , a.attname
-                           , a.atttypid
-                        from pg_catalog.pg_class r
-                        join pg_catalog.pg_attribute a on a.attrelid = r.oid
-                       where r.relnamespace = history_namespace
-                         and r.relkind = 'r'
-                         and a.attnum > 0
-                         and not a.attisdropped
-                       order by r.relname, a.attnum)
-    select history_namespace as "namespace"
-         , x.mrelname as "relation"
-         , case
-             when x.is_missing_relation then 'Missing relation.'
-             when x.is_missing_attribute then format('Missing attribute %s.', x.mattname)
-             when x.is_type_mismatch then format('Attribute %s: Expected type %s, found %s.', x.mattname, x.matttypid, x.hatttypid)
-             else 'Unknown'
-           end as "message"
-    from (select m.relname as "mrelname"
-               , m.attname as "mattname"
-               , m.atttypid::regtype as "matttypid"
-               , h.relname as "hrelname"
-               , ha.attname as "hattname"
-               , ha.atttypid::regtype as "hatttypid"
-               , h.relname is null "is_missing_relation"
-               , ha.attname is null "is_missing_attribute"
-               , ha.atttypid is null or m.atttypid <> ha.atttypid "is_type_mismatch"
-            from main as "m"
-       left join hist_rel as "h" using (relname)
-       left join hist_att as "ha" using (relname, attname)
-           order by m.relname, m.attnum) x
-           where is_missing_relation
-              or is_missing_attribute
-              or is_type_mismatch;
-$$;
+as $body$
+declare
+    p bitemporal.params;
+    hist_rel text;
+    hist_relid regclass;
+    r record;
+begin
+    p := bitemporal.get_params();
+
+    select relnamespace::regnamespace
+         , relname
+      into namespace
+         , relation
+      from pg_class
+      where oid = relid;
+
+    hist_rel := bitemporal.history_relation_name(relid);
+    hist_relid := bitemporal.history_relation_id(relid);
+
+    if hist_relid is null then
+        message := 'Missing history relation.';
+        expected := hist_rel;
+        return next;
+        return;
+    end if;
+
+    for r in select a.attname
+                  , a.atttypid
+                  , h.attname as "hist_attname"
+                  , h.atttypid as "hist_atttypid"
+                  , h.attname is null "is_missing_attribute"
+                  , h.atttypid is null or a.atttypid <> h.atttypid "is_type_mismatch"
+             from pg_attribute as "a"
+        left join pg_attribute as "h" on h.attrelid = hist_relid and h.attname = a.attname and not h.attisdropped
+            where a.attrelid = relid
+              and a.attnum > 0
+              and not a.attisdropped
+    loop
+        attribute := r.attname;
+
+        if r.is_missing_attribute then
+            message := 'Missing attribute.';
+            return next;
+        elsif r.is_type_mismatch then
+            message := 'Mismatched type.';
+            expected := r.atttypid::regtype::text;
+            was := r.hist_atttypid::regtype::text;
+            return next;
+        end if;
+    end loop;
+
+    return;
+end $body$;
 
 create or replace function bitemporal.primary_key_errors
     ( relid regclass )

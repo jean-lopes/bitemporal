@@ -1,20 +1,20 @@
- namespace | relation | message 
------------+----------+---------
-(0 rows)
+                            h.ok
+ namespace | relation | attribute | message | expected | was 
+-----------+----------+-----------+---------+----------+-----
 
-         namespace          | relation |      message      
-----------------------------+----------+-------------------
- hre_missing_relations_hist | rel2     | Missing relation.
- hre_missing_relations_hist | rel3     | Missing relation.
-(2 rows)
+                                           h.missing_relation
+ namespace |     relation     | attribute |          message          |          expected          | was 
+-----------+------------------+-----------+---------------------------+----------------------------+-----
+ h         | missing_relation |           | Missing history relation. | h_history.missing_relation | 
 
-         namespace          | relation |        message        
-----------------------------+----------+-----------------------
- hre_missing_attribute_hist | rel      | Missing attribute id.
-(1 row)
+                               h.missing_attribute
+ namespace |     relation      | attribute |      message       | expected | was 
+-----------+-------------------+-----------+--------------------+----------+-----
+ h         | missing_attribute | id        | Missing attribute. |          | 
 
-           namespace           | relation |                     message                      
--------------------------------+----------+--------------------------------------------------
- hre_wrong_attribute_type_hist | rel      | Attribute id: Expected type integer, found text.
-(1 row)
+                              h.wrong_attribute_type
+ namespace |       relation       | attribute |     message      | expected | was  
+-----------+----------------------+-----------+------------------+----------+------
+ h         | wrong_attribute_type | id        | Mismatched type. | integer  | text
+ h         | wrong_attribute_type | value     | Mismatched type. | integer  | text
 

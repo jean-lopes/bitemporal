@@ -607,18 +607,22 @@ as $$
       from p
 $$;
 
-create or replace function bitemporal.validate_overlap_constraint
+create or replace function bitemporal.overlap_constraint_errors
     ( relid regclass )
 returns table
-    ( namespace         name
-    , relation          name
-    , message           text )
+    ( namespace       name
+    , relation        name
+    , constraint_name name
+    , attribute       name
+    , message         text
+    , expected        text
+    , was             text )
 language plpgsql
 stable
 as $body$
 declare
-    expected record;
     r record;
+    e record;
 begin
     select relnamespace::regnamespace
          , relname
@@ -630,8 +634,8 @@ begin
     select c.conrelid
          , c.conkey
          , array_agg(a.attname) as "attnames"
-         , array_agg(bitemporal.overlap_operator_for(a.attname)) as "conexclopnames"
-      into expected
+         , array_agg(bitemporal.overlap_operator_for(a.attname)) as "oprnames"
+      into e
       from (select x.conrelid
                  , x.conkey
                  , unnest(x.conkey) as "attnum"
@@ -644,38 +648,64 @@ begin
       join pg_attribute a on a.attrelid = c.conrelid and a.attnum = c.attnum
      group by c.conrelid, c.conkey;
 
-    select y.conname
-      into r
-      from (select c.conname
-                 , array_agg(c.attname) as "attnames"
-                 , array_agg(c.oprname) as "conexclopnames"
-              from (select x.oid
-                         , x.conrelid
-                         , x.conname
-                         , array_agg(x.attnum) over (partition by x.oid) as "conkey"
-                         , array_agg(x.opoid) over (partition by x.oid) as "conexclop"
-                         , x.attnum
-                         , a.attname
-                         , x.opoid
-                         , o.oprname
-                      from (select oid
-                                 , conrelid
-                                 , conname
-                                 , unnest(conkey) as "attnum"
-                                 , unnest(conexclop) as "opoid"
-                              from pg_constraint
-                             where conrelid = relid
-                               and contype = 'x'
-                             order by oid asc, attnum asc) x
-                      join pg_attribute a on a.attrelid = x.conrelid and a.attnum = x.attnum
-                      join pg_operator o on o.oid = x.opoid) c
-             where c.conkey = expected.conkey
-             group by c.conname) y
-     where y.attnames = expected.attnames
-       and y.conexclopnames = expected.conexclopnames;
+    for r in with pgc as (select oid
+                               , conname
+                               , conrelid
+                               , unnest(conkey) as "attnum"
+                               , unnest(conexclop) as "opoid"
+                            from pg_constraint
+                           where conrelid = relid
+                             and contype = 'x'
+                           order by oid, attnum)
+                , aex as (select pgc.oid
+                               , pgc.conname
+                               , pgc.conrelid
+                               , pgc.attnum
+                               , pgc.opoid
+                               , a.attname
+                               , o.oprname
+                            from pgc
+                            join pg_attribute a on a.attrelid = pgc.conrelid and a.attnum = pgc.attnum
+                            join pg_operator o on o.oid = pgc.opoid)
+                , bex as (select oid
+                               , conname
+                               , array_agg(attnum) as "conkey"
+                               , array_agg(attname) as "attnames"
+                               , array_agg(oprname) as "oprnames"
+                           from aex
+                          group by oid, conname)
+                , cex as (select oid
+                               , conname
+                               , conkey
+                               , attnames
+                               , oprnames
+                               , oprnames = e.oprnames as "is_ok"
+                            from bex
+                           where conkey = e.conkey)
+             select conname
+                  , unnest(attnames) as "attname"
+                  , unnest(oprnames) as "oprname"
+                  , unnest(e.oprnames) as "expected_oprname"
+                  , is_ok
+               from cex
+              order by is_ok desc
+    loop
+        if r.is_ok then
+            return;
+        end if;
+
+        if r.oprname <> r.expected_oprname then
+            constraint_name := r.conname;
+            attribute := r.attname;
+            message := 'Invalid operator.';
+            expected := r.expected_oprname;
+            was := r.oprname;
+            return next;
+        end if;
+    end loop;
 
     if not found then
-        message := format('Missing constraint. Expected a exclude constraint on %s with operators %s', expected.attnames, expected.conexclopnames);
+        message := 'Missing exclude overlap constraint.';
         return next;
     end if;
 

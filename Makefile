@@ -22,8 +22,8 @@ test: reset
 	$(PSQL_CMD) --no-psqlrc --file test/remove-with-foreign-key.sql --output test/remove-with-foreign-key.sql.out
 	diff --ignore-trailing-space --ignore-blank-lines test/remove-with-foreign-key.sql.out test/remove-with-foreign-key.sql.out.expected
 
-	$(PSQL_CMD) --no-psqlrc --file test/validate-overlap-constraint.sql --output test/validate-overlap-constraint.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/validate-overlap-constraint.sql.out test/validate-overlap-constraint.sql.out.expected
+	$(PSQL_CMD) --no-psqlrc --file test/overlap-constraint-errors.sql --output test/overlap-constraint-errors.sql.out
+	diff --ignore-trailing-space --ignore-blank-lines test/overlap-constraint-errors.sql.out test/overlap-constraint-errors.sql.out.expected
 
 	$(PSQL_CMD) --no-psqlrc --file test/validate-adjacency-constraint.sql --output test/validate-adjacency-constraint.sql.out
 	diff --ignore-trailing-space --ignore-blank-lines test/validate-adjacency-constraint.sql.out test/validate-adjacency-constraint.sql.out.expected

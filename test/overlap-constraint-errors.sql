@@ -1,18 +1,12 @@
 \set QUIET 'on'
+\pset footer 'off'
 
-drop table if exists sample.overlap_constraint_ok;
-drop table if exists sample.overlap_constraint_missing_constraint;
-drop table if exists sample.pk_ex_different_fields;
-drop table if exists sample.overlap_constraint_pk_ex_mismatch_fields;
-drop table if exists sample.overlap_constraint_pk_ex_mismatch_fields_2;
-drop table if exists sample.overlap_constraint_wrong_operator;
-drop table if exists sample.overlap_constraint_wrong_operator_2;
-drop table if exists sample.overlap_constraint_wrong_operator_3;
-drop table if exists sample.overlap_constraint_multiple_with_pk_fields;
-drop table if exists sample.overlap_constraint_multiple_with_pk_fields_2;
+drop schema if exists oc cascade;
+create schema oc;
 
-\echo 'bitemporal.validate_overlap_constraint - [ok]'
-create table sample.overlap_constraint_ok
+\echo 'bitemporal.overlap_constraint_errors - [ok]'
+\pset title 'oc.ok'
+create table oc.ok
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -23,10 +17,11 @@ create table sample.overlap_constraint_ok
     , exclude using gist (id with =, id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_ok');
+select * from bitemporal.overlap_constraint_errors('oc.ok');
 
-\echo 'bitemporal.validate_overlap_constraint - [missing overlap constraint]'
-create table sample.overlap_constraint_missing_constraint
+\echo 'bitemporal.overlap_constraint_errors - [missing overlap constraint]'
+\pset title 'oc.missing_constraint'
+create table oc.missing_constraint
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -36,10 +31,11 @@ create table sample.overlap_constraint_missing_constraint
     , primary key(id, id2, valid_period)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_missing_constraint');
+select * from bitemporal.overlap_constraint_errors('oc.missing_constraint');
 
-\echo 'bitemporal.validate_overlap_constraint - [primary key and exclude constraint mismatched fields]'
-create table sample.overlap_constraint_pk_ex_mismatch_fields
+\echo 'bitemporal.overlap_constraint_errors - [primary key and exclude constraint mismatched fields]'
+\pset title 'oc.pk_ex_mismatch_fields'
+create table oc.pk_ex_mismatch_fields
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -50,10 +46,11 @@ create table sample.overlap_constraint_pk_ex_mismatch_fields
     , exclude using gist (id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_pk_ex_mismatch_fields');
+select * from bitemporal.overlap_constraint_errors('oc.pk_ex_mismatch_fields');
 
-\echo 'bitemporal.validate_overlap_constraint - [primary key and exclude constraint mismatched fields]'
-create table sample.overlap_constraint_pk_ex_mismatch_fields_2
+\echo 'bitemporal.overlap_constraint_errors - [primary key and exclude constraint mismatched fields]'
+\pset title 'oc.pk_ex_mismatch_fields_2'
+create table oc.pk_ex_mismatch_fields_2
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -64,10 +61,11 @@ create table sample.overlap_constraint_pk_ex_mismatch_fields_2
     , exclude using gist (value with =, id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_pk_ex_mismatch_fields_2');
+select * from bitemporal.overlap_constraint_errors('oc.pk_ex_mismatch_fields_2');
 
-\echo 'bitemporal.validate_overlap_constraint - [wrong operator on common field]'
-create table sample.overlap_constraint_wrong_operator
+\echo 'bitemporal.overlap_constraint_errors - [wrong operator on common field]'
+\pset title 'oc.wrong_operator'
+create table oc.wrong_operator
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -78,10 +76,11 @@ create table sample.overlap_constraint_wrong_operator
     , exclude using gist (id with <>, id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_wrong_operator');
+select * from bitemporal.overlap_constraint_errors('oc.wrong_operator');
 
-\echo 'bitemporal.validate_overlap_constraint - [wrong operator on valid_time field]'
-create table sample.overlap_constraint_wrong_operator_2
+\echo 'bitemporal.overlap_constraint_errors - [wrong operator on valid_time field]'
+\pset title 'oc.wrong_operator_2'
+create table oc.wrong_operator_2
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -92,10 +91,11 @@ create table sample.overlap_constraint_wrong_operator_2
     , exclude using gist (id with =, id2 with =, valid_period with -|-)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_wrong_operator_2');
+select * from bitemporal.overlap_constraint_errors('oc.wrong_operator_2');
 
-\echo 'bitemporal.validate_overlap_constraint - [multiple wrong operators]'
-create table sample.overlap_constraint_wrong_operator_3
+\echo 'bitemporal.overlap_constraint_errors - [multiple wrong operators]'
+\pset title 'oc.wrong_operator_3'
+create table oc.wrong_operator_3
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -106,10 +106,11 @@ create table sample.overlap_constraint_wrong_operator_3
     , exclude using gist (valid_period with -|-, id2 with <>, id with <>)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_wrong_operator_3');
+select * from bitemporal.overlap_constraint_errors('oc.wrong_operator_3');
 
-\echo 'bitemporal.validate_overlap_constraint - [multiple constraints with primary key fields, one ok]'
-create table sample.overlap_constraint_multiple_with_pk_fields
+\echo 'bitemporal.overlap_constraint_errors - [multiple constraints with primary key fields, one ok]'
+\pset title 'oc.multiple_one_ok'
+create table oc.multiple_one_ok
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -121,10 +122,11 @@ create table sample.overlap_constraint_multiple_with_pk_fields
     , exclude using gist (id with =, id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_multiple_with_pk_fields');
+select * from bitemporal.overlap_constraint_errors('oc.multiple_one_ok');
 
-\echo 'bitemporal.validate_overlap_constraint - [multiple constraints with primary key fields, none ok]'
-create table sample.overlap_constraint_multiple_with_pk_fields_2
+\echo 'bitemporal.overlap_constraint_errors - [multiple constraints with primary key fields, none ok]'
+\pset title 'oc.multiple_none_ok'
+create table oc.multiple_none_ok
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -136,4 +138,4 @@ create table sample.overlap_constraint_multiple_with_pk_fields_2
     , exclude using gist (valid_period with -|-, id with =, id2 with =)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_overlap_constraint('sample.overlap_constraint_multiple_with_pk_fields_2');
+select * from bitemporal.overlap_constraint_errors('oc.multiple_none_ok');

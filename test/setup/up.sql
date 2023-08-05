@@ -712,18 +712,22 @@ begin
     return;
 end; $body$;
 
-create or replace function bitemporal.validate_adjacency_constraint
+create or replace function bitemporal.adjacency_constraint_errors
     ( relid regclass )
 returns table
-    ( namespace         name
-    , relation          name
-    , message           text )
+    ( namespace       name
+    , relation        name
+    , constraint_name name
+    , attribute       name
+    , message         text
+    , expected        text
+    , was             text )
 language plpgsql
 stable
 as $body$
 declare
-    expected record;
     r record;
+    e record;
 begin
     select relnamespace::regnamespace
          , relname
@@ -732,49 +736,69 @@ begin
       from pg_class
      where oid = relid;
 
-    select attrelid
-         , array_agg(x.attnum) as "conkey"
-         , array_agg(x.attname) as "attnames"
-         , array_agg(x.conexclopname) as "conexclopnames"
-      into expected
-      from (select attrelid
-                 , attnum
+    select array_agg(attnum) as "conkey"
+         , array_agg(attname) as "attnames"
+         , array_agg(oprname) as "oprnames"
+      into e
+      from (select attnum
                  , attname
-                 , bitemporal.adjacency_operator_for(attname) as "conexclopname"
-              from pg_attribute
-             where attrelid = relid
-               and attnum > 0
-               and attname not in (select system_time_name from bitemporal.params)
-             order by attnum) x
-     group by x.attrelid;
+                 , bitemporal.adjacency_operator_for(attname) as "oprname"
+            from pg_attribute
+            where attrelid = relid
+              and attnum > 0
+              and not attisdropped
+              and attname not in (select system_time_name from bitemporal.params)
+            order by attnum) x;
 
-    select y.oid
-      into r
-      from (select x.oid
-                 , array_agg(x.attnum) as "conkey"
-                 , array_agg(x.attname) as "attnames"
-                 , array_agg(x.oprname) as "conexclopnames"
-              from (select c.oid
-                         , c.attnum
-                         , a.attname
-                         , o.oprname
-                      from (select oid
-                                 , conrelid
-                                 , unnest(conkey) as "attnum"
-                                 , unnest(conexclop) as "opoid"
-                              from pg_constraint
-                             where conrelid = relid
-                               and contype = 'x') c
-                      join pg_operator o on o.oid = c.opoid
-                      join pg_attribute a on a.attrelid = c.conrelid and a.attnum = c.attnum
-                     order by c.oid, c.attnum) x
-             group by x.oid) y
-     where y.conkey = expected.conkey
-       and y.attnames = expected.attnames
-       and y.conexclopnames = expected.conexclopnames;
+    for r in with x as (select oid
+                             , conrelid
+                             , conname
+                             , unnest(conkey) as "attnum"
+                             , unnest(conexclop) as "oproid"
+                          from pg_constraint
+                        where conrelid = relid
+                          and contype = 'x'
+                        order by oid, attnum)
+                , y as (select x.oid, x.conrelid, x.conname, x.attnum, x.oproid
+                             , a.attname
+                             , o.oprname
+                          from x
+                          join pg_attribute a on a.attrelid = x.conrelid and a.attnum = x.attnum
+                          join pg_operator o on o.oid = x.oproid)
+                , z as (select y.oid
+                             , y.conrelid
+                             , y.conname
+                             , y.attnum
+                             , y.attname
+                             , y.oprname
+                             , array_agg(y.attnum) over (partition by y.oid) as "conkey"
+                             , array_agg(y.oprname) over (partition by y.oid) as "conexclopnames"
+                          from y group by y.oid, y.conrelid, y.conname, y.attnum, y.attname, y.oprname)
+           select z.conexclopnames = e.oprnames is_ok
+                , z.conname
+                , z.attname
+                , z.oprname
+                , bitemporal.adjacency_operator_for(z.attname) as "expected_oprname"
+             from z
+            where z.conkey = e.conkey
+            order by 1 desc, z.oid, z.attnum
+    loop
+        if r.is_ok then
+            return;
+        end if;
+
+        if r.oprname <> r.expected_oprname then
+            constraint_name := r.conname;
+            attribute := r.attname;
+            message := 'Invalid operator.';
+            expected := r.expected_oprname;
+            was := r.oprname;
+            return next;
+        end if;
+    end loop;
 
     if not found then
-        message := format('Missing constraint. Expected a exclude constraint on %s with operators %s', expected.attnames, expected.conexclopnames);
+        message := 'Missing exclude adjacency constraint.';
         return next;
     end if;
 

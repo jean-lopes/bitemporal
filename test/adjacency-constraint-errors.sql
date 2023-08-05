@@ -1,8 +1,12 @@
 \set QUIET 'on'
+\pset footer 'off'
 
-\echo 'bitemporal.validate_adjacency_constraint - [ok]'
-drop table if exists sample.adjacency_constraint_ok;
-create table sample.adjacency_constraint_ok
+drop schema if exists ac cascade;
+create schema ac;
+
+\echo 'bitemporal.adjacency_constraint_errors - [ok]'
+\pset title 'ac.ok'
+create table ac.ok
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -13,11 +17,11 @@ create table sample.adjacency_constraint_ok
     , exclude using gist (id with =, id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_adjacency_constraint('sample.adjacency_constraint_ok');
+select * from bitemporal.adjacency_constraint_errors('ac.ok');
 
-\echo 'bitemporal.validate_adjacency_constraint - [missing adjacency constraint]'
-drop table if exists sample.adjacency_constraint_missing;
-create table sample.adjacency_constraint_missing
+\echo 'bitemporal.adjacency_constraint_errors - [missing adjacency constraint]'
+\pset title 'ac.missing'
+create table ac.missing
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -26,11 +30,11 @@ create table sample.adjacency_constraint_missing
     , system_period     int4range not null
     , primary key(id, id2, valid_period));
 
-select * from bitemporal.validate_adjacency_constraint('sample.adjacency_constraint_missing');
+select * from bitemporal.adjacency_constraint_errors('ac.missing');
 
-\echo 'bitemporal.validate_adjacency_constraint - [mismatched fields]'
-drop table if exists sample.adjacency_constraint_mismatched_fields;
-create table sample.adjacency_constraint_mismatched_fields
+\echo 'bitemporal.adjacency_constraint_errors - [mismatched fields]'
+\pset title 'ac.mismatched_fields'
+create table ac.mismatched_fields
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -41,11 +45,11 @@ create table sample.adjacency_constraint_mismatched_fields
     , exclude using gist (id with =, id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with =, value with =, system_period with =, valid_period with -|-) );
 
-select * from bitemporal.validate_adjacency_constraint('sample.adjacency_constraint_mismatched_fields');
+select * from bitemporal.adjacency_constraint_errors('ac.mismatched_fields');
 
-\echo 'bitemporal.validate_adjacency_constraint - [mismatched fields]'
-drop table if exists sample.adjacency_constraint_mismatched_fields_2;
-create table sample.adjacency_constraint_mismatched_fields_2
+\echo 'bitemporal.adjacency_constraint_errors - [mismatched fields]'
+\pset title 'ac.mismatched_fields_2'
+create table ac.mismatched_fields_2
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -54,13 +58,13 @@ create table sample.adjacency_constraint_mismatched_fields_2
     , system_period     int4range not null
     , primary key(id, id2, valid_period)
     , exclude using gist (id with =, id2 with =, valid_period with &&)
-    , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with -|-, system_period with =) );
+    , exclude using gist (id with =, id2 with =, value with =, valid_period with -|-) );
 
-select * from bitemporal.validate_adjacency_constraint('sample.adjacency_constraint_mismatched_fields_2');
+select * from bitemporal.adjacency_constraint_errors('ac.mismatched_fields_2');
 
-\echo 'bitemporal.validate_adjacency_constraint - [wrong operator on common field]'
-drop table if exists sample.adjacency_constraint_wrong_operator;
-create table sample.adjacency_constraint_wrong_operator
+\echo 'bitemporal.adjacency_constraint_errors - [wrong operator on common field]'
+\pset title 'ac.wrong_operator'
+create table ac.wrong_operator
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -71,11 +75,11 @@ create table sample.adjacency_constraint_wrong_operator
     , exclude using gist (id with =, id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with <>, value with =, value2 with =, valid_period with -|-) );
 
-select * from bitemporal.validate_adjacency_constraint('sample.adjacency_constraint_wrong_operator');
+select * from bitemporal.adjacency_constraint_errors('ac.wrong_operator');
 
-\echo 'bitemporal.validate_adjacency_constraint - [wrong operator on valid_time field]'
-drop table if exists sample.adjacency_constraint_wrong_operator_2;
-create table sample.adjacency_constraint_wrong_operator_2
+\echo 'bitemporal.adjacency_constraint_errors - [wrong operator on valid_time field]'
+\pset title 'ac.wrong_operator_2'
+create table ac.wrong_operator_2
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -86,11 +90,11 @@ create table sample.adjacency_constraint_wrong_operator_2
     , exclude using gist (id with =, id2 with =, valid_period with &&)
     , exclude using gist (id with =, id2 with =, value with =, value2 with =, valid_period with &&) );
 
-select * from bitemporal.validate_adjacency_constraint('sample.adjacency_constraint_wrong_operator_2');
+select * from bitemporal.adjacency_constraint_errors('ac.wrong_operator_2');
 
-\echo 'bitemporal.validate_adjacency_constraint - [multiple wrong operators]'
-drop table if exists sample.adjacency_constraint_wrong_operator_3;
-create table sample.adjacency_constraint_wrong_operator_3
+\echo 'bitemporal.adjacency_constraint_errors - [multiple wrong operators]'
+\pset title 'ac.wrong_operator_3'
+create table ac.wrong_operator_3
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -101,11 +105,11 @@ create table sample.adjacency_constraint_wrong_operator_3
     , exclude using gist (id with =, id2 with =, valid_period with &&)
     , exclude using gist (id with <>, id2 with <>, value with <>, value2 with <>, valid_period with &&) );
 
-select * from bitemporal.validate_adjacency_constraint('sample.adjacency_constraint_wrong_operator_3');
+select * from bitemporal.adjacency_constraint_errors('ac.wrong_operator_3');
 
-\echo 'bitemporal.validate_adjacency_constraint - [multiple constraints, one ok]'
-drop table if exists sample.adjacency_constraint_multiple;
-create table sample.adjacency_constraint_multiple
+\echo 'bitemporal.adjacency_constraint_errors - [multiple constraints, one ok]'
+\pset title 'ac.multiple_one_ok'
+create table ac.multiple_one_ok
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -117,11 +121,11 @@ create table sample.adjacency_constraint_multiple
     , exclude using gist (id with <>, id2 with =, value with =, value2 with <>, valid_period with &&)
     , exclude using gist (id with =, valid_period with -|-, id2 with =, value2 with =, value with =) );
 
-select * from bitemporal.validate_adjacency_constraint('sample.adjacency_constraint_multiple');
+select * from bitemporal.adjacency_constraint_errors('ac.multiple_one_ok');
 
-\echo 'bitemporal.validate_adjacency_constraint - [multiple constraints with primary key fields, none ok]'
-drop table if exists sample.adjacency_constraint_multiple_2;
-create table sample.adjacency_constraint_multiple_2
+\echo 'bitemporal.adjacency_constraint_errors - [multiple constraints with primary key fields, none ok]'
+\pset title 'ac.wrong_operator_none_ok'
+create table ac.multiple_none_ok
     ( id                int not null
     , id2               int not null
     , value             int not null
@@ -133,4 +137,4 @@ create table sample.adjacency_constraint_multiple_2
     , exclude using gist (id with <>, id2 with =, value with =, value2 with <>, valid_period with &&)
     , exclude using gist (id with =, valid_period with -|-, id2 with <>, value2 with =, value with =) );
 
-select * from bitemporal.validate_adjacency_constraint('sample.adjacency_constraint_multiple_2');
+select * from bitemporal.adjacency_constraint_errors('ac.multiple_none_ok');

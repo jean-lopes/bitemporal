@@ -1,0 +1,25 @@
+             st.ok
+ namespace | relation | message 
+-----------+----------+---------
+
+                        st.missing
+ namespace | relation |              message              
+-----------+----------+-----------------------------------
+ st        | missing  | Missing attribute "system_period"
+
+                               st.nullable
+ namespace | relation |                     message                      
+-----------+----------+--------------------------------------------------
+ st        | nullable | Attribute "system_period" should be not nullable
+
+                                                 st.invalid_type
+ namespace |   relation   |                                       message                                        
+-----------+--------------+--------------------------------------------------------------------------------------
+ st        | invalid_type | Attribute "system_period" with invalid type. Expected: "int4range", found: "integer"
+
+                                                 st.nullable_invalid_type
+ namespace |       relation        |                                       message                                        
+-----------+-----------------------+--------------------------------------------------------------------------------------
+ st        | nullable_invalid_type | Attribute "system_period" should be not nullable
+ st        | nullable_invalid_type | Attribute "system_period" with invalid type. Expected: "int4range", found: "integer"
+

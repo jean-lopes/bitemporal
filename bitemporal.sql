@@ -300,3 +300,55 @@ begin
 
     return;
 end $body$;
+
+create or replace function bitemporal.system_time_errors
+    ( relid regclass )
+returns table
+    ( namespace name
+    , relation  name
+    , message   text )
+language plpgsql
+stable
+as $body$
+declare
+  cfg bitemporal.configuration;
+  r   record;
+begin
+    cfg := bitemporal.get_configuration();
+
+    select relnamespace::regnamespace::text
+         , relname
+      into namespace
+         , relation
+      from pg_class
+     where oid = relid;
+
+    select atttypid::regtype as "atttypname"
+         , attnotnull
+      into r
+      from pg_attribute
+     where attrelid = relid
+       and attname = cfg.system_time_name
+       and not attisdropped;
+
+    if not found then
+       message := format('Missing attribute "%s"', cfg.system_time_name);
+       return next;
+       return;
+    end if;
+
+    if not r.attnotnull then
+       message := format('Attribute "%s" should be not nullable', cfg.system_time_name);
+       return next;
+    end if;
+
+    if r.atttypname <> cfg.system_time_range then
+       message := format('Attribute "%s" with invalid type. Expected: "%s", found: "%s"'
+                        , cfg.system_time_name
+                        , cfg.system_time_range::text
+                        , r.atttypname );
+       return next;
+    end if;
+
+    return;
+end $body$;

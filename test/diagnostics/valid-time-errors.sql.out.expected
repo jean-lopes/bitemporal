@@ -1,0 +1,25 @@
+             vt.ok
+ namespace | relation | message 
+-----------+----------+---------
+
+                       vt.missing
+ namespace | relation |             message              
+-----------+----------+----------------------------------
+ vt        | missing  | Missing attribute "valid_period"
+
+                              vt.nullable
+ namespace | relation |                     message                     
+-----------+----------+-------------------------------------------------
+ vt        | nullable | Attribute "valid_period" should be not nullable
+
+                                                vt.invalid_type
+ namespace |   relation   |                                       message                                       
+-----------+--------------+-------------------------------------------------------------------------------------
+ vt        | invalid_type | Attribute "valid_period" with invalid type. Expected: "int4range", found: "integer"
+
+                                                vt.nullable_invalid_type
+ namespace |       relation        |                                       message                                       
+-----------+-----------------------+-------------------------------------------------------------------------------------
+ vt        | nullable_invalid_type | Attribute "valid_period" should be not nullable
+ vt        | nullable_invalid_type | Attribute "valid_period" with invalid type. Expected: "int4range", found: "integer"
+

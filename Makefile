@@ -13,7 +13,6 @@ reset: clean
 tests := $(wildcard test/**/*.sql)
 
 $(tests): reset
-	echo $@
 	$(PSQL_CMD) --file $@ --output $@.out
 	diff --ignore-trailing-space --ignore-blank-lines $@.out $@.out.expected
 

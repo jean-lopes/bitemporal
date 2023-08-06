@@ -607,3 +607,50 @@ begin
 
     return;
 end $body$;
+
+create or replace function bitemporal.relation_errors
+    ( relid regclass )
+returns table
+    ( namespace name
+    , relation  name
+    , message   text )
+language plpgsql
+stable
+as $body$
+begin
+    return query select x.namespace
+                      , x.relation
+                      , x.message
+                   from bitemporal.valid_time_errors(relid) x;
+
+    return query select x.namespace
+                      , x.relation
+                      , x.message
+                   from bitemporal.system_time_errors(relid) x;
+
+    return query select x.namespace
+                      , x.relation
+                      , x.message
+                   from bitemporal.primary_key_errors(relid) x;
+
+    return query select x.namespace
+                      , x.relation
+                      , x.message
+                   from bitemporal.overlap_constraint_errors(relid) x;
+
+    return query select x.namespace
+                      , x.relation
+                      , x.message
+                   from bitemporal.adjacency_constraint_errors(relid) x;
+
+    return query select x.namespace
+                      , x.relation
+                      , x.message
+                   from bitemporal.history_relation_errors(relid) x;
+
+    -- TODO: generated triggers
+    -- TODO: generated procedures
+    -- TODO: invalid table type (information_schema.tables.type)
+
+    return;
+end $body$;

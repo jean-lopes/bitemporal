@@ -1,0 +1,14 @@
+             re.ok
+ namespace | relation | message 
+-----------+----------+---------
+
+                              re.not_ok
+ namespace | relation |                   message                    
+-----------+----------+----------------------------------------------
+ re        | not_ok   | Missing attribute "valid_period"
+ re        | not_ok   | Missing attribute "system_period"
+ re        | not_ok   | Missing primary key
+ re        | not_ok   | Missing exclude overlap constraint
+ re        | not_ok   | Missing exclude adjacency constraint
+ re        | not_ok   | Missing history relation "re_history.not_ok"
+

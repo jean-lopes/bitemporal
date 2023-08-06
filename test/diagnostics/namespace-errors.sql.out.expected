@@ -1,0 +1,9 @@
+ namespace | relation |                   message                    
+-----------+----------+----------------------------------------------
+ ne        | not_ok   | Missing attribute "valid_period"
+ ne        | not_ok   | Missing attribute "system_period"
+ ne        | not_ok   | Missing primary key
+ ne        | not_ok   | Missing exclude overlap constraint
+ ne        | not_ok   | Missing exclude adjacency constraint
+ ne        | not_ok   | Missing history relation "ne_history.not_ok"
+

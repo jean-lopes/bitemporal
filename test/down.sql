@@ -9,5 +9,7 @@ drop schema if exists h cascade;
 drop schema if exists h_history cascade;
 drop schema if exists re cascade;
 drop schema if exists re_history cascade;
+drop schema if exists ne cascade;
+drop schema if exists ne_history cascade;
 drop schema if exists bitemporal cascade;
 drop extension if exists btree_gist cascade;

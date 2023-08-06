@@ -654,3 +654,29 @@ begin
 
     return;
 end $body$;
+
+create or replace function bitemporal.namespace_errors
+    ( nsid regnamespace )
+returns table
+    ( namespace name
+    , relation  name
+    , message   text )
+language plpgsql
+stable
+as $body$
+declare
+    relid regclass;
+begin
+    for relid in select oid::regclass
+                   from pg_class
+                  where relnamespace = nsid
+                    and relkind = 'r' -- TODO: what about other types of relations? https://www.postgresql.org/docs/current/catalog-pg-class.html
+    loop
+        return query select x.namespace
+                          , x.relation
+                          , x.message
+                       from bitemporal.relation_errors(relid) x;
+    end loop;
+
+    return;
+end $body$;

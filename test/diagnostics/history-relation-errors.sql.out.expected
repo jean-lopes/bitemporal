@@ -1,0 +1,20 @@
+              h.ok
+ namespace | relation | message 
+-----------+----------+---------
+
+                                  h.missing_relation
+ namespace |     relation     |                        message                        
+-----------+------------------+-------------------------------------------------------
+ h         | missing_relation | Missing history relation "h_history.missing_relation"
+
+                  h.missing_attribute
+ namespace |     relation      |        message         
+-----------+-------------------+------------------------
+ h_history | missing_attribute | Missing attribute "id"
+
+                                          h.wrong_attribute_type
+ namespace |       relation       |                                message                                 
+-----------+----------------------+------------------------------------------------------------------------
+ h_history | wrong_attribute_type | Mismatched type on attribute "id". Expected "integer", found "text"
+ h_history | wrong_attribute_type | Mismatched type on attribute "value". Expected "integer", found "text"
+

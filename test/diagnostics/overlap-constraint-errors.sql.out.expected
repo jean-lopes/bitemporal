@@ -1,0 +1,46 @@
+             oc.ok
+ namespace | relation | message 
+-----------+----------+---------
+
+                        oc.missing_constraint
+ namespace |      relation      |              message               
+-----------+--------------------+------------------------------------
+ oc        | missing_constraint | Missing exclude overlap constraint
+
+                        oc.pk_ex_mismatch_fields
+ namespace |       relation        |              message               
+-----------+-----------------------+------------------------------------
+ oc        | pk_ex_mismatch_fields | Missing exclude overlap constraint
+
+                        oc.pk_ex_mismatch_fields_2
+ namespace |        relation         |              message               
+-----------+-------------------------+------------------------------------
+ oc        | pk_ex_mismatch_fields_2 | Missing exclude overlap constraint
+
+                                                                  oc.wrong_operator
+ namespace |    relation    |                                                         message                                                         
+-----------+----------------+-------------------------------------------------------------------------------------------------------------------------
+ oc        | wrong_operator | Invalid operator on constraint "wrong_operator_id_id2_valid_period_excl" for attribute "id". Expected: "=", found: "<>"
+
+                                                                         oc.wrong_operator_2
+ namespace |     relation     |                                                                message                                                                
+-----------+------------------+---------------------------------------------------------------------------------------------------------------------------------------
+ oc        | wrong_operator_2 | Invalid operator on constraint "wrong_operator_2_id_id2_valid_period_excl" for attribute "valid_period". Expected: "&&", found: "-|-"
+
+                                                                         oc.wrong_operator_3
+ namespace |     relation     |                                                                message                                                                
+-----------+------------------+---------------------------------------------------------------------------------------------------------------------------------------
+ oc        | wrong_operator_3 | Invalid operator on constraint "wrong_operator_3_valid_period_id2_id_excl" for attribute "id". Expected: "=", found: "<>"
+ oc        | wrong_operator_3 | Invalid operator on constraint "wrong_operator_3_valid_period_id2_id_excl" for attribute "id2". Expected: "=", found: "<>"
+ oc        | wrong_operator_3 | Invalid operator on constraint "wrong_operator_3_valid_period_id2_id_excl" for attribute "valid_period". Expected: "&&", found: "-|-"
+
+       oc.multiple_one_ok
+ namespace | relation | message 
+-----------+----------+---------
+
+                                                                         oc.multiple_none_ok
+ namespace |     relation     |                                                                message                                                                
+-----------+------------------+---------------------------------------------------------------------------------------------------------------------------------------
+ oc        | multiple_none_ok | Invalid operator on constraint "multiple_none_ok_id_id2_valid_period_excl" for attribute "valid_period". Expected: "&&", found: "-|-"
+ oc        | multiple_none_ok | Invalid operator on constraint "multiple_none_ok_valid_period_id_id2_excl" for attribute "valid_period". Expected: "&&", found: "-|-"
+

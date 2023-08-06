@@ -1,44 +1,23 @@
-PSQL_CMD ?= psql -U postgres
+PSQL_CMD ?= psql -U postgres --no-psqlrc
 
 .PHONY: clean reset test enable-debug disable-debug
 
 clean:
-	rm -f test/*.out
-	$(PSQL_CMD) --file test/setup/down.sql
+	rm -f test/**/*.out
+	$(PSQL_CMD) --file test/down.sql
 
 reset: clean
-	$(PSQL_CMD) --file test/setup/up.sql
+	$(PSQL_CMD) --file bitemporal.sql
+	$(PSQL_CMD) --file test/up.sql
 
-test: reset
-	$(PSQL_CMD) --no-psqlrc --file test/save.sql --output test/save.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/save.sql.out test/save.sql.out.expected
+tests := $(wildcard test/**/*.sql)
 
-	$(PSQL_CMD) --no-psqlrc --file test/remove.sql --output test/remove.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/remove.sql.out test/remove.sql.out.expected
+$(tests): reset
+	echo $@
+	$(PSQL_CMD) --file $@ --output $@.out
+	diff --ignore-trailing-space --ignore-blank-lines $@.out $@.out.expected
 
-	$(PSQL_CMD) --no-psqlrc --file test/save-with-foreign-key.sql --output test/save-with-foreign-key.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/save-with-foreign-key.sql.out test/save-with-foreign-key.sql.out.expected
-
-	$(PSQL_CMD) --no-psqlrc --file test/remove-with-foreign-key.sql --output test/remove-with-foreign-key.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/remove-with-foreign-key.sql.out test/remove-with-foreign-key.sql.out.expected
-
-	$(PSQL_CMD) --no-psqlrc --file test/overlap-constraint-errors.sql --output test/overlap-constraint-errors.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/overlap-constraint-errors.sql.out test/overlap-constraint-errors.sql.out.expected
-
-	$(PSQL_CMD) --no-psqlrc --file test/adjacency-constraint-errors.sql --output test/adjacency-constraint-errors.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/adjacency-constraint-errors.sql.out test/adjacency-constraint-errors.sql.out.expected
-
-	$(PSQL_CMD) --no-psqlrc --file test/history-relation-errors.sql --output test/history-relation-errors.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/history-relation-errors.sql.out test/history-relation-errors.sql.out.expected
-
-	$(PSQL_CMD) --no-psqlrc --file test/primary-key-errors.sql --output test/primary-key-errors.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/primary-key-errors.sql.out test/primary-key-errors.sql.out.expected
-
-	$(PSQL_CMD) --no-psqlrc --file test/valid-time-errors.sql --output test/valid-time-errors.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/valid-time-errors.sql.out test/valid-time-errors.sql.out.expected
-
-	$(PSQL_CMD) --no-psqlrc --file test/system-time-errors.sql --output test/system-time-errors.sql.out
-	diff --ignore-trailing-space --ignore-blank-lines test/system-time-errors.sql.out test/system-time-errors.sql.out.expected
+test: $(tests)
 
 enable-debug:
 	$(PSQL_CMD) --file dev/enable-debug.sql

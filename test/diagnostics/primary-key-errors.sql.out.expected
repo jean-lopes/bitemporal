@@ -1,0 +1,14 @@
+             pk.ok
+ namespace | relation | message 
+-----------+----------+---------
+
+                 pk.missing
+ namespace | relation |       message       
+-----------+----------+---------------------
+ pk        | missing  | Missing primary key
+
+                              pk.missing_valid_time
+ namespace |      relation      |                     message                     
+-----------+--------------------+-------------------------------------------------
+ pk        | missing_valid_time | Missing attribute "valid_period" on primary key
+
